@@ -10,7 +10,7 @@ function MyMarquee() {
       gradientColor="black"
       speed={30}
     >
-      <div className="flex items-center gap-32">
+      <div className="flex items-center space-x-20">
         <Spotify />
         <h1 className="text-sm whitespace-nowrap">Something else</h1>
         <h1 className="text-sm whitespace-nowrap">Another one</h1>

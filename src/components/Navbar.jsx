@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CircleUser, Camera, ContactRound, FolderGit2 } from "lucide-react";
 import MyMarquee from "./MyMarquee";
+import NvmLogo from "./NvmLogo";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,9 +16,10 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <span className="text-xl font-bold text-blue-600">nvm</span>
+            <div className="h-14 w-14 text-gray-600 hover:text-blue-600">
+              <NvmLogo className="h-14 w-14" />
+            </div>
           </div>
-
           <MyMarquee />
 
           {/* Desktop Menu */}
