@@ -1,13 +1,29 @@
 import Navbar from "./components/Navbar";
-import MainContent from "./components/MainContent";
 import Footer from "./components/Footer";
+import SectionOne from "./components/SectionOne";
+import SectionTwo from "./components/SectionTwo";
+import SectionThree from "./components/SectionThree";
 
 function App() {
   return (
     <div className="">
       <Navbar />
-      <MainContent />
-      {/* <WorkContent /> */}
+      {/* <MainContent /> */}
+      <div className="">
+        <hr />
+        <section className="pt-16">
+          <SectionOne />
+        </section>
+        <hr />
+        <section className="">
+          <SectionTwo />
+        </section>
+        <hr />
+        <section className="">
+          <SectionThree />
+        </section>
+      </div>
+      <hr />
       <Footer />
     </div>
   );
