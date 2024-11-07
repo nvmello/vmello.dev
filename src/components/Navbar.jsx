@@ -11,7 +11,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="shadow-md bg-black">
+    <nav className="fixed w-full top-0 left-0 shadow-md bg-black">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -51,7 +51,7 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className="text-gray-600 hover:text-blue-600 text-2xl font-bold"
+              className="text-gray-600 hover:text-blue-600 text-2l font-bold"
             >
               {isOpen ? "×" : "☰"}
             </button>

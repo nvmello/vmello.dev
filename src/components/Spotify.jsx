@@ -66,7 +66,7 @@ function Spotify() {
   }, []);
 
   return (
-    <h1 className="text-sm whitespace-nowrap">
+    <span className="text-sm whitespace-nowrap mr-8">
       On Repeat:{" "}
       <a
         href={currentTrack.link}
@@ -77,7 +77,7 @@ function Spotify() {
         {currentTrack.name}
         {currentTrack.artist ? ` - ${currentTrack.artist}` : ""}
       </a>
-    </h1>
+    </span>
   );
 }
 
