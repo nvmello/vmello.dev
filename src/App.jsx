@@ -6,25 +6,26 @@ import SectionThree from "./components/SectionThree";
 
 function App() {
   return (
-    <div className="">
+    <div className="bg-accent-bg min-h-screen">
       <Navbar />
-      {/* <MainContent /> */}
-      <div className="">
-        <hr />
-        <section className="pt-16">
+      <div className="container mx-auto overflow-y-auto">
+        <hr className="mt-16" />
+        <section className="h-[40vh] overflow-y-auto">
           <SectionOne />
         </section>
         <hr />
-        <section className="">
+        <section className="h-[40vh] overflow-y-auto">
           <SectionTwo />
         </section>
         <hr />
-        <section className="">
+        <section className="h-[40vh] overflow-y-auto">
           <SectionThree />
         </section>
       </div>
       <hr />
-      <Footer />
+      <div className="bg-accent-bg">
+        <Footer />
+      </div>
     </div>
   );
 }
