@@ -13,7 +13,7 @@ function MyMarquee() {
       <div className="flex items-center space-x-20">
         <Spotify />
         <span className="text-sm whitespace-nowrap mr-8">
-          Events I'm Attending: Better Together
+          Events: Better Together
         </span>
         <span className="text-sm whitespace-nowrap mr-8">Another one</span>
       </div>

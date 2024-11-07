@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className="bg-gray-800 text-white p-4">
+    <footer className="">
       <div className="container mx-auto">
         <p>footy</p>
       </div>
