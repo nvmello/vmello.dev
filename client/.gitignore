@@ -46,3 +46,4 @@ out
 coverage
 .nyc_output
 
+server/ssl/*
