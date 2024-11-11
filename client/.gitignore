@@ -9,6 +9,8 @@ lerna-debug.log*
 
 # Dependencies
 node_modules
+client/node_modules
+server/node_modules
 .npm
 .yarn
 
