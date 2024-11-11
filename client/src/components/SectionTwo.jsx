@@ -1,18 +1,19 @@
 import { FolderGit2 } from "lucide-react";
+import { SectionHeader, SectionContent } from "./layout-components"; // You'll need to export these
+
 function SectionTwo() {
   return (
-    <div>
-      <div className="flex items-center gap-4 p-4">
-        <FolderGit2 className="text-accent hover:text-accent-hover" size={22} />
-        <h1 className="text-xl">Work Experience</h1>
-      </div>
-      <p className="ml-8 mr-16 mb-4 text-4xl">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae
-        saepe provident officiis quibusdam iusto. Molestias iste officia
-        incidunt optio modi, voluptate at architecto mollitia obcaecati illum
-        dolor maiores deserunt rerum?
-      </p>
-    </div>
+    <>
+      <SectionHeader icon={FolderGit2} title="Work" />
+      <SectionContent>
+        <p className="text-accent">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae
+          saepe provident officiis quibusdam iusto. Molestias iste officia
+          incidunt optio modi, voluptate at architecto mollitia obcaecati illum
+          dolor maiores deserunt rerum?
+        </p>
+      </SectionContent>
+    </>
   );
 }
 
