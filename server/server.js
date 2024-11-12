@@ -67,8 +67,7 @@ console.log(
  * ------------------
  * Defines core constants for server setup
  */
-const PORT = 3000;
-const HOST = "localhost";
+const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
 const DB_NAME = "fitness_tracker";
 
@@ -92,7 +91,7 @@ app.use(express.json());
 
 // CORS middleware with secure configuration
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "https://vmello.dev");
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Max-Age", "86400");
@@ -306,7 +305,7 @@ process.on("SIGTERM", async () => {
 async function startServer() {
   try {
     await connectToDatabase();
-    httpServer.listen(PORT, HOST, () => {
+    httpServer.listen(PORT, () => {
       console.log(`🚀 Server running on http://${HOST}:${PORT}`);
       console.log(`🔌 WebSocket server is running`);
       console.log(`📅 Server started at: ${new Date().toISOString()}`);

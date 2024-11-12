@@ -30,7 +30,7 @@ function WorkoutData() {
    */
   const fetchLatestWorkout = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/workouts");
+      const response = await fetch(import.meta.env.VITE_API_URL);
 
       if (!response.ok) {
         throw new Error(
