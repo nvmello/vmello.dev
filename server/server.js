@@ -39,7 +39,15 @@ dotenv.config();
  */
 const app = express();
 const httpServer = createServer(app);
-const wss = new WebSocketServer({ server: httpServer });
+const wss = new WebSocketServer({
+  server: httpServer,
+  verifyClient: (info) => {
+    const origin = info.origin;
+    return (
+      origin === "https://vmello.dev" || origin === "https://www.vmello.dev"
+    );
+  },
+});
 
 /**
  * WebSocket Client Management
@@ -91,7 +99,13 @@ app.use(express.json());
 
 // CORS middleware with secure configuration
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  const allowedOrigins = ["https://vmello.dev", "https://www.vmello.dev"];
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Max-Age", "86400");
