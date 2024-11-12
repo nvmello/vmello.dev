@@ -52,7 +52,6 @@ const clients = new Set();
 // Validate environment variables
 if (!process.env.MONGODB_URI) {
   console.error("Missing MONGODB_URI environment variable");
-  process.exit(1);
 }
 
 // Safely log configuration (without exposing sensitive data)
@@ -67,6 +66,7 @@ console.log(
  * ------------------
  * Defines core constants for server setup
  */
+const HOST = process.env.HOST || "localhost";
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
 const DB_NAME = "fitness_tracker";
@@ -91,7 +91,17 @@ app.use(express.json());
 
 // CORS middleware with secure configuration
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://vmello.dev");
+  const allowedOrigins = [
+    "https://vmello.dev",
+    "https://www.vmello.dev",
+    "http://localhost:5173/",
+  ];
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Max-Age", "86400");
@@ -180,7 +190,6 @@ async function connectToDatabase() {
     return client.db(DB_NAME);
   } catch (error) {
     console.error("❌ Database connection error:", error);
-    process.exit(1);
   }
 }
 
@@ -291,7 +300,6 @@ process.on("SIGTERM", async () => {
     "🛑 SIGTERM received. Closing HTTP server and database connection..."
   );
   await client.close();
-  process.exit(0);
 });
 
 /**
@@ -312,7 +320,6 @@ async function startServer() {
     });
   } catch (error) {
     console.error("❌ Failed to start server:", error);
-    process.exit(1);
   }
 }
 
