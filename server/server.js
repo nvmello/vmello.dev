@@ -39,15 +39,7 @@ dotenv.config();
  */
 const app = express();
 const httpServer = createServer(app);
-const wss = new WebSocketServer({
-  server: httpServer,
-  verifyClient: (info) => {
-    const origin = info.origin;
-    return (
-      origin === "https://vmello.dev" || origin === "https://www.vmello.dev"
-    );
-  },
-});
+const wss = new WebSocketServer({ server: httpServer });
 
 /**
  * WebSocket Client Management
@@ -60,6 +52,7 @@ const clients = new Set();
 // Validate environment variables
 if (!process.env.MONGODB_URI) {
   console.error("Missing MONGODB_URI environment variable");
+  process.exit(1);
 }
 
 // Safely log configuration (without exposing sensitive data)
@@ -74,7 +67,8 @@ console.log(
  * ------------------
  * Defines core constants for server setup
  */
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
+const HOST = "localhost";
 const MONGODB_URI = process.env.MONGODB_URI;
 const DB_NAME = "fitness_tracker";
 
@@ -97,20 +91,8 @@ const client = new MongoClient(MONGODB_URI);
 app.use(express.json());
 
 // CORS middleware with secure configuration
-// Update your CORS middleware
 app.use((req, res, next) => {
-  const allowedOrigins = ["https://vmello.dev", "https://www.vmello.dev"];
-  const origin = req.headers.origin;
-
-  console.log("Incoming request from origin:", origin);
-
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-    console.log("CORS allowed for:", origin);
-  } else {
-    console.log("CORS rejected for:", origin);
-  }
-
+  res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Max-Age", "86400");
@@ -194,23 +176,12 @@ function broadcastNewWorkout(workout) {
  */
 async function connectToDatabase() {
   try {
-    console.log("Attempting to connect to MongoDB...");
     await client.connect();
     console.log("✅ Successfully connected to MongoDB.");
-
-    // Test the connection
-    const db = client.db(DB_NAME);
-    const collections = await db.listCollections().toArray();
-    console.log(
-      "Available collections:",
-      collections.map((c) => c.name)
-    );
-
     return client.db(DB_NAME);
   } catch (error) {
     console.error("❌ Database connection error:", error);
-    // Log full error details
-    console.error("Full error:", JSON.stringify(error, null, 2));
+    process.exit(1);
   }
 }
 
@@ -307,24 +278,6 @@ async function getWorkoutsHandler(req, res) {
 // Route definitions
 app.post("/api/workouts", createWorkoutHandler);
 app.get("/api/workouts", getWorkoutsHandler);
-app.get("/health", (req, res) => {
-  res.status(200).send("OK");
-});
-app.get("/", (req, res) => {
-  res.send({
-    status: "Server is running",
-    timestamp: new Date().toISOString(),
-    endpoints: ["/health", "/api/workouts"],
-  });
-});
-
-app.use((req, res) => {
-  console.log(`404 for ${req.method} ${req.url}`);
-  res.status(404).send({
-    error: "Not Found",
-    path: req.url,
-  });
-});
 
 /**
  * Graceful Shutdown Handler
@@ -339,6 +292,7 @@ process.on("SIGTERM", async () => {
     "🛑 SIGTERM received. Closing HTTP server and database connection..."
   );
   await client.close();
+  process.exit(0);
 });
 
 /**
@@ -352,20 +306,14 @@ process.on("SIGTERM", async () => {
 async function startServer() {
   try {
     await connectToDatabase();
-    httpServer.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
+    httpServer.listen(PORT, HOST, () => {
+      console.log(`🚀 Server running on http://${HOST}:${PORT}`);
       console.log(`🔌 WebSocket server is running`);
       console.log(`📅 Server started at: ${new Date().toISOString()}`);
     });
-
-    // Add error handler for HTTP server
-    httpServer.on("error", (error) => {
-      console.error("HTTP Server Error:", error);
-      // Don't exit the process
-    });
   } catch (error) {
     console.error("❌ Failed to start server:", error);
-    // Don't exit on startup error, just log it
+    process.exit(1);
   }
 }
 
