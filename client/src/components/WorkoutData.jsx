@@ -62,7 +62,7 @@ function WorkoutData() {
     // Initialize WebSocket connection if it doesn't exist
     if (!wsRef.current) {
       // Create new WebSocket connection
-      wsRef.current = new WebSocket("ws://localhost:3000");
+      wsRef.current = new WebSocket(import.meta.env.VITE_WS_URL);
 
       // Handle incoming WebSocket messages
       wsRef.current.onmessage = (event) => {
