@@ -30,7 +30,7 @@ function WorkoutData() {
    */
   const fetchLatestWorkout = async () => {
     try {
-      const response = await fetch(import.meta.env.VITE_API_URL);
+      const response = await fetch("http://localhost:3000/api/workouts");
 
       if (!response.ok) {
         throw new Error(
@@ -62,7 +62,7 @@ function WorkoutData() {
     // Initialize WebSocket connection if it doesn't exist
     if (!wsRef.current) {
       // Create new WebSocket connection
-      wsRef.current = new WebSocket(import.meta.env.VITE_WS_URL);
+      wsRef.current = new WebSocket("ws://localhost:3000");
 
       // Handle incoming WebSocket messages
       wsRef.current.onmessage = (event) => {
@@ -114,7 +114,7 @@ function WorkoutData() {
   return (
     <span className="text-sm whitespace-nowrap mr-8">
       <span className="font-bold">
-        Todays workout:{" "}
+        Today's workout:{" "}
         {workout?.type ? (
           iconMap[workout.type]
         ) : (
