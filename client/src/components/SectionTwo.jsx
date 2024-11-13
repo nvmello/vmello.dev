@@ -6,12 +6,7 @@ function SectionTwo() {
     <>
       <SectionHeader icon={FolderGit2} title="Work" />
       <SectionContent>
-        <p className="text-accent">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae
-          saepe provident officiis quibusdam iusto. Molestias iste officia
-          incidunt optio modi, voluptate at architecto mollitia obcaecati illum
-          dolor maiores deserunt rerum?
-        </p>
+        <p className="text-accent">Coming soon</p>
       </SectionContent>
     </>
   );

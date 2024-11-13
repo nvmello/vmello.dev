@@ -79,7 +79,6 @@ function WorkoutData() {
             .toLocaleDateString("en-US", options)
             .replace(",", "");
 
-          // const parsedWorkoutDate = workoutEndDate;
           //get current date in workouts timezone
           const currentDate = new Date();
 
@@ -90,7 +89,7 @@ function WorkoutData() {
 
           return formattedWorkoutDate === formattedCurrentDate;
         } catch (error) {
-          console.error(`Error processing workout ${workouts.id}:`, error);
+          console.log(`Error processing workout ${workouts.id}:`, error);
           return false; // Skip entries with invalid dates
         }
       });
@@ -101,7 +100,7 @@ function WorkoutData() {
         );
         setWorkouts(todaysWorkouts);
       } else {
-        setError("No workouts found for today");
+        console.log("No workouts found for today");
       }
     } catch (error) {
       console.error(`Error processing workout ${workouts.id}:`, error);
@@ -170,7 +169,7 @@ function WorkoutData() {
   return (
     <span className="text-sm whitespace-nowrap mr-8">
       <span className="font-bold">
-        Today's workouts:{" "}
+        Today's Gains:{" "}
         {workouts.length > 0 ? (
           workouts.map((workout, index) => (
             <span key={workout.id}>

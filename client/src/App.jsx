@@ -13,25 +13,25 @@ function App() {
       <Navbar />
       <div className="container mx-auto overflow-y-auto">
         <hr className="mt-16" />
-        <section className="h-[40vh] overflow-y-auto">
+        <section className="min-h-[40vh] overflow-y-auto">
           <Section>
             <SectionOne />
           </Section>
         </section>
         <hr />
-        <section className="h-[40vh] overflow-y-auto">
+        <section className="min-h-[40vh] overflow-y-auto">
           <Section>
             <SectionTwo />
           </Section>
         </section>
         <hr />
-        <section className="h-[40vh] overflow-y-auto">
+        <section className="min-h-[40vh] overflow-y-auto">
           <Section>
             <SectionThree />
           </Section>
         </section>
         <hr />
-        <section className="h-[40vh] overflow-y-auto">
+        <section className="min-h-[40vh] overflow-y-auto">
           <Section>
             <SectionFour />
           </Section>
