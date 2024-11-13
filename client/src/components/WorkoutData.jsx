@@ -16,7 +16,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
  */
 function WorkoutData() {
   // Store the latest workout data
-  const [workout, setWorkout] = useState(null);
+  const [workouts, setWorkouts] = useState([]);
   // Track any errors that occur during data fetching or WebSocket operations
   const [error, setError] = useState(null);
   // Loading state for initial data fetch
@@ -42,7 +42,7 @@ function WorkoutData() {
 
       // If data exists, take the first workout (most recent)
       if (data && data.length > 0) {
-        setWorkout(data[0]);
+        setWorkouts(data[0]);
       } else {
         setError("No workout data found");
       }
@@ -55,10 +55,66 @@ function WorkoutData() {
     }
   };
 
+  const fetchTodaysWorkouts = async () => {
+    try {
+      const response = await fetch(import.meta.env.VITE_API_URL);
+
+      if (!response.ok) {
+        throw new Error(
+          `Network response was not ok. Status ${response.status}`
+        );
+      }
+
+      const data = await response.json();
+
+      // Filter workouts that were completed today,
+      const todaysWorkouts = data.filter((workouts) => {
+        try {
+          //create Date objects for workout end time
+          const workoutEndDate = new Date(workouts.end_date);
+
+          // Format the date
+          const options = { month: "short", day: "2-digit", year: "numeric" };
+          const formattedWorkoutDate = workoutEndDate
+            .toLocaleDateString("en-US", options)
+            .replace(",", "");
+
+          // const parsedWorkoutDate = workoutEndDate;
+          //get current date in workouts timezone
+          const currentDate = new Date();
+
+          // Format the date
+          const formattedCurrentDate = currentDate
+            .toLocaleDateString("en-US", options)
+            .replace(",", "");
+
+          return formattedWorkoutDate === formattedCurrentDate;
+        } catch (error) {
+          console.error(`Error processing workout ${workouts.id}:`, error);
+          return false; // Skip entries with invalid dates
+        }
+      });
+
+      if (todaysWorkouts.length > 0) {
+        todaysWorkouts.sort(
+          (a, b) => new Date(b.end_date) - new Date(a.end_date)
+        );
+        setWorkouts(todaysWorkouts);
+      } else {
+        setError("No workouts found for today");
+      }
+    } catch (error) {
+      console.error(`Error processing workout ${workouts.id}:`, error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     // Get initial workout data
-    fetchLatestWorkout();
-
+    fetchTodaysWorkouts();
+    console.log(workouts);
     // Initialize WebSocket connection if it doesn't exist
     if (!wsRef.current) {
       // Create new WebSocket connection
@@ -70,7 +126,7 @@ function WorkoutData() {
           const data = JSON.parse(event.data);
           // Update workout state if message indicates a new workout
           if (data.type === "new_workout") {
-            setWorkout(data.workout);
+            setWorkouts(data.workout);
           }
         } catch (error) {
           console.error("Error processing WebSocket message:", error);
@@ -114,11 +170,16 @@ function WorkoutData() {
   return (
     <span className="text-sm whitespace-nowrap mr-8">
       <span className="font-bold">
-        Today's workout:{" "}
-        {workout?.type ? (
-          iconMap[workout.type]
+        Today's workouts:{" "}
+        {workouts.length > 0 ? (
+          workouts.map((workout, index) => (
+            <span key={workout.id}>
+              {iconMap[workout.type]}
+              {index < workouts.length - 1 ? " + " : ""}
+            </span>
+          ))
         ) : (
-          <i className="fa-duotone fa-solid fa-potato" />
+          <i className="fa-solid fa-potato" />
         )}
       </span>
     </span>
