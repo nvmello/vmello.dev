@@ -32,7 +32,7 @@ SectionHeader.propTypes = {
 
 export const SectionContent = ({ children }) => {
   return (
-    <div className="text-base sm:text-xl md:text-2xl space-y-2 sm:space-y-4 leading-relaxed">
+    <div className="text-base sm:text-xl md:text-2xl space-y-2 sm:space-y-4 overflow-visible break-words leading-relaxed">
       {children}
     </div>
   );
