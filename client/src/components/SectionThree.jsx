@@ -8,7 +8,8 @@ function SectionThree() {
       <SectionContent>
         {/* Example of extending the base styles for a specific section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <div className="flex items-center space-x-2 text-accent p-4 rounded-lg hover:bg-accent/5 transition-colors">
+          <p className="text-accent">Coming soon</p>
+          {/* <div className="flex items-center space-x-2 text-accent p-4 rounded-lg hover:bg-accent/5 transition-colors">
             <p>LinkedIn</p>
           </div>
           <div className="flex items-center space-x-2 text-accent p-4 rounded-lg hover:bg-accent/5 transition-colors">
@@ -16,7 +17,7 @@ function SectionThree() {
           </div>
           <div className="flex items-center space-x-2 text-accent p-4 rounded-lg hover:bg-accent/5 transition-colors">
             <p>Twitter</p>
-          </div>
+          </div> */}
           {/* Add more social links as needed */}
         </div>
       </SectionContent>
