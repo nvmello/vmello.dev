@@ -94,7 +94,7 @@ app.use((req, res, next) => {
   const allowedOrigins = [
     "https://vmello.dev",
     "https://www.vmello.dev",
-    "http://localhost:5173/",
+    "http://localhost:5173",
   ];
   const origin = req.headers.origin;
 
