@@ -43,7 +43,6 @@ function Spotify() {
         );
         const data = await response.json();
         if (data.items?.[0]) {
-          console.log(data);
           setCurrentTrack({
             name: data.items[0].name,
             artist: data.items[0].artists[0].name,
