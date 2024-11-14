@@ -167,7 +167,7 @@ function WorkoutData() {
 
   // Render workout information
   return (
-    <span className="text-sm whitespace-nowrap mr-8">
+    <span className="text-sm whitespace-nowrap">
       <span className="font-bold">
         Today's Gains:{" "}
         {workouts.length > 0 ? (

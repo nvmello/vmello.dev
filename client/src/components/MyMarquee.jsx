@@ -11,8 +11,10 @@ function MyMarquee() {
       gradientColor="black"
       speed={30}
     >
-      <div className="flex items-center space-x-20">
+      <div className="flex items-center space-x-40 ml-20 mr-20">
         <Spotify />
+      </div>
+      <div className="flex items-center space-x-40 ml-20 mr-20">
         <WorkoutData />
       </div>
     </Marquee>
