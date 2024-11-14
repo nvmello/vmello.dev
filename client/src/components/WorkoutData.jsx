@@ -113,7 +113,7 @@ function WorkoutData() {
   useEffect(() => {
     // Get initial workout data
     fetchTodaysWorkouts();
-    console.log(workouts);
+
     // Initialize WebSocket connection if it doesn't exist
     if (!wsRef.current) {
       // Create new WebSocket connection

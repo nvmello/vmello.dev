@@ -5,7 +5,7 @@ import SectionOne from "./components/SectionOne";
 import SectionTwo from "./components/SectionTwo";
 import SectionThree from "./components/SectionThree";
 import SectionFour from "./components/SectionFour";
-import { Section } from "./components/layout-components"; // Added this import
+import { Section } from "./components/layout-components";
 
 function App() {
   return (
@@ -13,25 +13,25 @@ function App() {
       <Navbar />
       <div className="container mx-auto overflow-y-auto">
         <hr className="mt-16" />
-        <section className="min-h-[40vh] overflow-y-auto">
+        <section className="min-h-[35vh] overflow-y-auto">
           <Section>
             <SectionOne />
           </Section>
         </section>
         <hr />
-        <section className="min-h-[40vh] overflow-y-auto">
+        <section className="min-h-[35vh] overflow-y-auto">
           <Section>
             <SectionTwo />
           </Section>
         </section>
         <hr />
-        <section className="min-h-[40vh] overflow-y-auto">
+        <section className="min-h-[35vh] overflow-y-auto">
           <Section>
             <SectionThree />
           </Section>
         </section>
         <hr />
-        <section className="min-h-[40vh] overflow-y-auto">
+        <section className="min-h-[35vh] overflow-y-auto">
           <Section>
             <SectionFour />
           </Section>
