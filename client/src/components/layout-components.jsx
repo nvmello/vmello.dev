@@ -15,7 +15,7 @@ Section.propTypes = {
 
 export const SectionHeader = ({ icon: Icon, title }) => {
   return (
-    <div className="flex items-center gap-3 mb-4 sm:mb-6">
+    <div className="flex items-center gap-3 mb-4 sm:mb-6 ">
       <Icon
         className="text-accent hover:text-accent-hover transition-colors duration-200"
         size={22}
@@ -32,7 +32,7 @@ SectionHeader.propTypes = {
 
 export const SectionContent = ({ children }) => {
   return (
-    <div className="text-base sm:text-xl md:text-2xl space-y-2 sm:space-y-4 overflow-visible break-words leading-relaxed">
+    <div className="m-10 text-base sm:text-xl md:text-2xl space-y-2 sm:space-y-4 overflow-visible break-words leading-relaxed">
       {children}
     </div>
   );
