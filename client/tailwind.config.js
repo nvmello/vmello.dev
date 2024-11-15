@@ -13,6 +13,9 @@ export default {
           dark: "#1e40af", // if you want darker variations
         },
       },
+      boxShadow: {
+        "accent-hover": "0 4px 15px rgba(29, 78, 216, 0.3)", // Shadow based on accent.hover color
+      },
     },
   },
   plugins: [],
