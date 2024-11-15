@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const ConnectionCard = ({ data }) => {
   const { account, icon, username, subSection, subSectionData, link } = data;
   return (
-    <div className="px-4 w-1/2">
+    <div className="px-4 w-full w-32 mx-auto">
       <a
         href={link}
         target="_blank"
