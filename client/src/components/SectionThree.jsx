@@ -7,7 +7,7 @@ const responsive = {
   superLargeDesktop: {
     // the naming can be any, depends on you.
     breakpoint: { max: 4000, min: 3000 },
-    items: 5,
+    items: 3,
   },
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
@@ -19,7 +19,7 @@ const responsive = {
   },
   mobile: {
     breakpoint: { max: 464, min: 0 },
-    items: 1,
+    items: 2,
   },
 };
 
@@ -28,7 +28,19 @@ function SectionThree() {
     <>
       <SectionHeader icon={Network} title="Let's Connect" />
       <SectionContent>
-        <Carousel className=" p-5" responsive={responsive}>
+        <Carousel
+          className="flex items-center p-5 "
+          responsive={responsive}
+          swipeable={true}
+          draggable={true}
+          touchMove={true}
+          // ssr={true} // If you're using server-side rendering
+          infinite={true}
+          autoPlay={false} // Set to true if you want auto-sliding
+          keyBoardControl={true}
+          transitionDuration={500}
+          removeArrowOnDeviceType={["tablet", "mobile"]}
+        >
           <ConnectionCard data={instagramData}></ConnectionCard>
           <ConnectionCard data={linkedInData}></ConnectionCard>
           <ConnectionCard data={githubData}></ConnectionCard>
