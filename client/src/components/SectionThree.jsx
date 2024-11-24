@@ -26,7 +26,10 @@ const responsive = {
 function SectionThree() {
   return (
     <>
-      <SectionHeader icon={Network} title="Let's Connect" />
+      <SectionHeader
+        icon="fa-duotone fa-regular fa-chart-network"
+        title="Let's Connect"
+      />
       <SectionContent>
         <Carousel
           className="flex items-center p-5 "

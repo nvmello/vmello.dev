@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import { useColorContext } from "../context/ColorContext";
+import MyIcon from "./MyIcon";
+import iconMap from "./IconMap";
 /**
  * WorkoutData Component
  *
@@ -23,6 +25,8 @@ function WorkoutData() {
   const [isLoading, setIsLoading] = useState(true);
   // Persist WebSocket connection across re-renders using useRef
   const wsRef = useRef(null);
+
+  const { colorScheme } = useColorContext();
 
   /**
    * Fetches the most recent workout data from the REST API.
@@ -168,7 +172,7 @@ function WorkoutData() {
   // Render workout information
   return (
     <span className="text-sm whitespace-nowrap">
-      <span className="font-bold">
+      <span className={`${colorScheme.text} font-bold`}>
         Today's Gains:{" "}
         {workouts.length > 0 ? (
           workouts.map((workout, index) => (
@@ -178,7 +182,7 @@ function WorkoutData() {
             </span>
           ))
         ) : (
-          <i className="fa-solid fa-potato" />
+          <MyIcon icon="fa-duotone fa-solid fa-potato" />
         )}
       </span>
     </span>
@@ -186,97 +190,3 @@ function WorkoutData() {
 }
 
 export default WorkoutData;
-
-const iconMap = {
-  Pickleball: <i className="fa-solid fa-pickleball" />,
-  "American Football": <i className="fa-duotone fa-solid fa-football" />,
-  Archery: <i className="fa-duotone fa-solid fa-bow-arrow" />,
-  "Australian Football": <i className="fa-sharp fa-regular fa-football" />,
-  Badminton: <i className="fa-duotone fa-solid fa-shuttlecock" />,
-  Baseball: <i className="fa-duotone fa-solid fa-baseball" />,
-  Basketball: <i className="fa-duotone fa-solid fa-basketball" />,
-  Bowling: <i className="fa-duotone fa-solid fa-bowling-ball" />,
-  Boxing: <i className="fa-duotone fa-solid fa-boxing-glove" />,
-  Climbing: <i className="fa-duotone fa-solid fa-mountains" />,
-  Cricket: <i className="fa-duotone fa-solid fa-cricket-bat-ball" />,
-  "Cross Training": <i className="fa-duotone fa-solid fa-dumbbell" />,
-  Curling: <i className="fa-duotone fa-solid fa-curling-stone" />,
-  Cycling: <i className="fa-duotone fa-solid fa-bicycle" />,
-  Dance: <i className="fa-duotone fa-solid fa-people-dancing" />,
-  Elliptical: <i className="fa-duotone fa-solid fa-person-running" />,
-  "Equestrian Sports": <i className="fa-duotone fa-solid fa-horse" />,
-  Fencing: <i className="fa-duotone fa-solid fa-sword" />,
-  Fishing: <i className="fa-duotone fa-solid fa-fishing-rod" />,
-  "Functional Strength Training": (
-    <i className="fa-sharp fa-light fa-dumbbell" />
-  ),
-  Golf: <i className="fa-duotone fa-solid fa-golf-flag-hole" />,
-  Gymnastics: <i className="fa-duotone fa-solid fa-person-falling" />,
-  Handball: <i className="fa-solid fa-hands-holding-circle" />,
-  Hiking: <i className="fa-duotone fa-solid fa-person-hiking" />,
-  Hockey: <i className="fa-duotone fa-solid fa-hockey-stick" />,
-  Hunting: <i className="fa-duotone fa-solid fa-person-rifle" />,
-  Lacrosse: <i className="fa-duotone fa-solid fa-lacrosse-stick-ball" />,
-  "Martial Arts": <i className="fa-duotone fa-solid fa-luchador-mask" />,
-  "Mind and Body": <i className="fa-duotone fa-solid fa-brain" />,
-  "Paddle Sports": <i className="fa-duotone fa-solid fa-kayak" />,
-  Play: <i className="fa-duotone fa-solid fa-gamepad" />,
-  "Preparation and Recovery": <i className="fa-duotone fa-solid fa-bed" />,
-  Racquetball: (
-    <i className="fa-duotone fa-solid fa-table-tennis-paddle-ball" />
-  ),
-  Rowing: <i className="fa-duotone fa-solid fa-person-rowing" />,
-  Rugby: <i className="fa-duotone fa-solid fa-football-ball" />,
-  Running: <i className="fa-duotone fa-solid fa-person-running" />,
-  Sailing: <i className="fa-duotone fa-solid fa-sailboat" />,
-  "Skating Sports": <i className="fa-duotone fa-solid fa-person-skating" />,
-  "Snow Sports": <i className="fa-duotone fa-solid fa-person-skiing" />,
-  Soccer: <i className="fa-duotone fa-solid fa-futbol" />,
-  Softball: <i className="fa-duotone fa-solid fa-baseball" />,
-  Squash: <i className="fa-solid fa-x" />, // Similar to racquetball but leaving for distinction
-  "Stair Climbing": <i className="fa-duotone fa-solid fa-stairs" />,
-  "Surfing Sports": <i className="fa-duotone fa-solid fa-person-surfing" />,
-  Swimming: <i className="fa-duotone fa-solid fa-person-swimming" />,
-  "Table Tennis": (
-    <i className="fa-duotone fa-solid fa-table-tennis-paddle-ball" />
-  ),
-  Tennis: <i className="fa-duotone fa-solid fa-tennis-ball" />,
-  "Track and Field": <i className="fa-duotone fa-solid fa-timer" />,
-  "Traditional Strength Training": (
-    <i className="fa-duotone fa-solid fa-dumbbell" />
-  ),
-  Volleyball: <i className="fa-duotone fa-solid fa-volleyball" />,
-  Walking: <i className="fa-solid fa-person-walking" />,
-  "Water Fitness": <i className="fa-duotone fa-solid fa-person-swimming" />,
-  "Water Polo": <i className="fa-duotone fa-solid fa-water" />,
-  "Water Sports": <i className="fa-duotone fa-solid fa-water" />,
-  Wrestling: <i className="fa-duotone fa-solid fa-people-wrestling" />,
-  Yoga: <i className="fa-duotone fa-solid fa-spa" />,
-  Barre: <i className="fa-solid fa-x" />, // No good match
-  "Core Training": (
-    <i className="fa-duotone fa-solid fa-person-dots-from-line" />
-  ),
-  "Cross Country Skiing": (
-    <i className="fa-duotone fa-solid fa-person-skiing-nordic" />
-  ),
-  "Downhill Skiing": <i className="fa-duotone fa-solid fa-person-skiing" />,
-  Flexibility: <i className="fa-duotone fa-solid fa-person-stretching" />,
-  "High Intensity Interval Training": (
-    <i className="fa-duotone fa-solid fa-fire" />
-  ),
-  "Jump Rope": <i className="fa-solid fa-lasso" />,
-  Kickboxing: <i className="fa-duotone fa-solid fa-hand-fist" />,
-  Pilates: <i className="fa-duotone fa-solid fa-person-stretching" />,
-  Snowboarding: <i className="fa-duotone fa-solid fa-person-snowboarding" />,
-  "Step Training": <i className="fa-duotone fa-solid fa-stairs" />,
-  "Wheelchair Walk Pace": <i className="fa-duotone fa-solid fa-wheelchair" />,
-  "Wheelchair Run Pace": (
-    <i className="fa-duotone fa-solid fa-wheelchair-move" />
-  ),
-  "Tai Chi": <i className="fa-duotone fa-solid fa-yin-yang" />,
-  "Mixed Cardio": <i className="fa-duotone fa-solid fa-heart-pulse" />,
-  "Hand Cycling": <i className="fa-duotone fa-solid fa-wheelchair" />,
-  "Disc Sports": <i className="fa-duotone fa-solid fa-flying-disc" />,
-  "Fitness Gaming": <i className="fa-duotone fa-solid fa-gamepad" />,
-  "Other Activity": <i className="fa-duotone fa-solid fa-person" />,
-};
