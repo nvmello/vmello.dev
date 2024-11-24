@@ -1,7 +1,7 @@
 import Marquee from "react-fast-marquee";
 import Spotify from "./Spotify";
 import WorkoutData from "./WorkoutData";
-import { useColorContext } from "../context/ColorContext";
+import { useColorContext } from "../../context/ColorContext";
 
 function MyMarquee() {
   const { colorScheme } = useColorContext();

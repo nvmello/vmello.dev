@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useColorContext } from "../context/ColorContext";
-import MyIcon from "./MyIcon";
-import iconMap from "./IconMap";
+import { useColorContext } from "../../context/ColorContext";
+import MyIcon from "../util/MyIcon";
+import iconMap from "../util/IconMap";
 /**
  * WorkoutData Component
  *

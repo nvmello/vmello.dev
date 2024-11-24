@@ -1,6 +1,6 @@
 import { Camera } from "lucide-react";
-import { SectionHeader, SectionContent } from "./layout-components";
-import { useColorContext } from "../context/ColorContext";
+import { SectionHeader, SectionContent } from "../util/layout-components";
+import { useColorContext } from "../../context/ColorContext";
 
 function SectionFour() {
   const { colorScheme } = useColorContext();

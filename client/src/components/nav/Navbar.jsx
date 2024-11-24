@@ -1,8 +1,8 @@
 import { useState } from "react";
 import MyMarquee from "./MyMarquee";
 import NvmLogo from "./NvmLogo";
-import { useColorContext } from "../context/ColorContext";
-import MyIcon from "./MyIcon";
+import { useColorContext } from "../../context/ColorContext";
+import MyIcon from "../util/MyIcon";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,6 +1,6 @@
 import { Network } from "lucide-react";
-import { SectionHeader, SectionContent } from "./layout-components";
-import { ConnectionCard } from "./ConnectionCard";
+import { SectionHeader, SectionContent } from "../util/layout-components";
+import { ConnectionCard } from "../util/ConnectionCard";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 const responsive = {

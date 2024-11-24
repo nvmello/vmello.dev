@@ -1,4 +1,4 @@
-import { SectionHeader, SectionContent } from "./layout-components"; // You'll need to export these
+import { SectionHeader, SectionContent } from "../util/layout-components"; // You'll need to export these
 
 function SectionTwo() {
   return (
