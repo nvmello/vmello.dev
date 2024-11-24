@@ -1,4 +1,4 @@
-import { useColorContext } from "../context/ColorContext";
+import { useColorContext } from "../../context/ColorContext";
 function Footer() {
   const { colorScheme } = useColorContext();
 

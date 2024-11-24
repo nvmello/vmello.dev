@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useColorContext } from "../context/ColorContext";
+import { useColorContext } from "../../context/ColorContext";
 import MyIcon from "./MyIcon";
 
 export const Section = ({ children }) => {

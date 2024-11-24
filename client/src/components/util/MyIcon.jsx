@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { useColorContext } from "../context/ColorContext";
+import { useColorContext } from "../../context/ColorContext";
 
 const MyIcon = ({
   icon,
