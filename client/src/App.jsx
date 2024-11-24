@@ -6,10 +6,12 @@ import SectionTwo from "./components/SectionTwo";
 import SectionThree from "./components/SectionThree";
 import SectionFour from "./components/SectionFour";
 import { Section } from "./components/layout-components";
+import { useColorContext } from "./context/ColorContext";
 
 function App() {
+  const { colorScheme } = useColorContext();
   return (
-    <div className="bg-accent-bg min-h-screen flex-grow">
+    <div className={`${colorScheme.bg} min-h-screen flex-grow`}>
       <Navbar />
       <div className="container mx-auto overflow-y-auto">
         <hr className="mt-16" />
@@ -38,7 +40,7 @@ function App() {
         </section>
       </div>
       <hr />
-      <div className="bg-accent-bg">
+      <div className={colorScheme.bg}>
         <Footer />
       </div>
     </div>

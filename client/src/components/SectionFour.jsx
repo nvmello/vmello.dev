@@ -1,24 +1,35 @@
 import { Camera } from "lucide-react";
 import { SectionHeader, SectionContent } from "./layout-components";
+import { useColorContext } from "../context/ColorContext";
 
 function SectionFour() {
+  const { colorScheme } = useColorContext();
+
   return (
     <>
-      <SectionHeader icon={Camera} title="Photography" />
+      <SectionHeader
+        icon="fa-duotone fa-regular fa-camera"
+        title="Photography"
+      />
       <SectionContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
-            <p className="text-accent">Coming soon</p>
-            {/* <button className="px-4 py-2 text-accent hover:text-accent-hover border border-accent hover:border-accent-hover rounded-lg transition-colors">
-              View Gallery
-            </button> */}
+            <p className="">Coming soon</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="aspect-square bg-accent/10 rounded-lg"></div>
-            <div className="aspect-square bg-accent/10 rounded-lg"></div>
-            <div className="aspect-square bg-accent/10 rounded-lg"></div>
-            <div className="aspect-square bg-accent/10 rounded-lg"></div>
+            <div
+              className={`aspect-square ${colorScheme.bgFaded} rounded-lg`}
+            ></div>
+            <div
+              className={`aspect-square ${colorScheme.bgFaded} rounded-lg`}
+            ></div>
+            <div
+              className={`aspect-square ${colorScheme.bgFaded} rounded-lg`}
+            ></div>
+            <div
+              className={`aspect-square ${colorScheme.bgFaded} rounded-lg`}
+            ></div>
           </div>
         </div>
       </SectionContent>

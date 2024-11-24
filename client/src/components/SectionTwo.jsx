@@ -1,12 +1,11 @@
-import { FolderGit2 } from "lucide-react";
 import { SectionHeader, SectionContent } from "./layout-components"; // You'll need to export these
 
 function SectionTwo() {
   return (
     <>
-      <SectionHeader icon={FolderGit2} title="Work" />
+      <SectionHeader icon="fa-duotone fa-solid fa-display-code" title="Work" />
       <SectionContent>
-        <p className="text-accent">Coming soon</p>
+        <p>Coming soon</p>
       </SectionContent>
     </>
   );

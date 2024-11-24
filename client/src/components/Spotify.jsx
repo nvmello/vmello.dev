@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
+import { useColorContext } from "../context/ColorContext";
 
 function Spotify() {
+  const { colorScheme } = useColorContext();
+
   const [currentTrack, setCurrentTrack] = useState({
     name: "Loading...",
     artist: "",
@@ -66,12 +69,12 @@ function Spotify() {
 
   return (
     <div className="text-sm whitespace-nowrap w-1/2">
-      <span className="font-bold">On Repeat:</span>{" "}
+      <span className={`${colorScheme.text} font-bold`}>On Repeat:</span>{" "}
       <a
         href={currentTrack.link}
         target="_blank"
         rel="noopener noreferrer"
-        className="hover:text-blue-400 transition-colors"
+        className={`${colorScheme.hover} ${colorScheme.text}`}
       >
         {currentTrack.name}
         {currentTrack.artist ? ` - ${currentTrack.artist}` : ""}
