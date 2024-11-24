@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useColorContext } from "../context/ColorContext";
+import { useColorContext } from "../../context/ColorContext";
 
 function Spotify() {
   const { colorScheme } = useColorContext();
