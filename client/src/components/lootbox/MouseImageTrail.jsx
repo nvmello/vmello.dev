@@ -2,6 +2,7 @@ import { useAnimate } from "framer-motion";
 import React, { useRef } from "react";
 import { FiMousePointer } from "react-icons/fi";
 import { useColorContext } from "../../context/ColorContext";
+import MyIcon from "../util/MyIcon";
 
 export const Example = () => {
   const { colorScheme } = useColorContext();
@@ -21,14 +22,17 @@ export const Example = () => {
         "/photos/h.jpg",
       ]}
     >
+      <i class=""></i>
       <section
         className={`grid h-[50vh] w-full place-content-center rounded-lg ${colorScheme.bg} ${colorScheme.borderAccent}`}
       >
         <p
           className={`flex items-center gap-2 text-3xl font-bold uppercase ${colorScheme.text} `}
         >
-          <FiMousePointer />
-          <span>Hover me</span>
+          <MyIcon icon="hidden md:block fa-sharp-duotone fa-regular fa-arrow-pointer" />
+          <MyIcon icon="md:hidden fa-duotone fa-solid fa-hand-point-up" />
+          <span className="hidden md:block">Hover me</span>
+          <span className="md:hidden">Touch me</span>
         </p>
       </section>
     </MouseImageTrail>
