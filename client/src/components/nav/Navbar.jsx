@@ -32,17 +32,13 @@ const Navbar = () => {
             <MyIcon icon="fa-duotone fa-solid fa-display-code" />
             <MyIcon icon="fa-duotone fa-regular fa-camera" />
             <MyIcon icon="fa-duotone fa-regular fa-chart-network" />
-
-            {/* <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-              Sign In
-            </button> */}
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className={`block px-3 py-2 ${colorScheme.text} ${colorScheme.hover} text-2l font-bold`}
+              className={`block px-3 py-2 ${colorScheme.bg} ${colorScheme.text} ${colorScheme.hover} text-2l font-bold`}
             >
               {isOpen ? "×" : "☰"}
             </button>
