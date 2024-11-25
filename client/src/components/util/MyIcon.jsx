@@ -4,7 +4,7 @@ import { useColorContext } from "../../context/ColorContext";
 
 const MyIcon = ({
   icon,
-  link = "#",
+  link,
   size = "text-xl",
   className = "",
   onClick,
@@ -32,8 +32,10 @@ const MyIcon = ({
     duration-300
   `.trim();
 
+  const Element = link ? "a" : "span";
+
   return (
-    <a
+    <Element
       href={link}
       className={containerClasses}
       onClick={onClick}
@@ -53,7 +55,7 @@ const MyIcon = ({
       {...props}
     >
       <i className={iconClasses} />
-    </a>
+    </Element>
   );
 };
 
