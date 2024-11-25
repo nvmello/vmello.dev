@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useColorContext } from "../context/ColorContext";
+import { useColorContext } from "../../context/ColorContext";
 
 export const ConnectionCard = ({ data }) => {
   const { account, icon, username, subSection, subSectionData, link } = data;

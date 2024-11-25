@@ -1,0 +1,112 @@
+{
+  "accounts": {
+    "professional": {
+      "linkedin": {
+        "account": "LinkedIn",
+        "icon": "fa-brands fa-linkedin",
+        "link": "https://www.linkedin.com/in/nvmello/",
+        "active": true
+      },
+      "github": {
+        "account": "Github",
+        "icon": "fa-brands fa-github",
+        "link": "https://github.com/nvmello",
+        "active": true
+      }
+    },
+    "social": {
+      "steam": {
+        "account": "Steam",
+        "icon": "fa-brands fa-steam",
+        "link": "https://steamcommunity.com/profiles/76561199084454580",
+        "active": true
+      },
+      "instagram": {
+        "account": "Instagram",
+        "icon": "fa-brands fa-instagram",
+        "link": "https://www.instagram.com/nickvmorello/",
+        "active": true
+      },
+      "snapchat": {
+        "account": "Snap",
+        "icon": "fa-brands fa-snapchat",
+        "link": "https://www.snapchat.com/add/nvmello",
+        "active": true
+      },
+      "epic": {
+        "account": "Epic Games",
+        "icon": "fa-brands fa-epic-games",
+        "link": "",
+        "active": false
+      },
+      "playstation": {
+        "account": "PlayStation",
+        "icon": "fa-brands fa-playstation",
+        "link": "",
+        "active": false
+      },
+      "nintendo": {
+        "account": "Nintendo",
+        "icon": "fa-brands fa-nintendo-switch",
+        "link": "",
+        "active": false
+      },
+      "chess": {
+        "account": "Chess.com",
+        "icon": "fa-solid fa-chess",
+        "link": "",
+        "active": false
+      }
+    },
+    "payments": {
+      "paypal": {
+        "account": "PayPal",
+        "icon": "fa-brands fa-paypal",
+        "link": "https://www.paypal.com/paypalme/nvmore",
+        "active": true
+      },
+      "cashapp": {
+        "account": "Cash App",
+        "icon": "fa-solid fa-dollar-sign",
+        "link": "",
+        "active": false
+      },
+      "venmo": {
+        "account": "Venmo",
+        "icon": "fa-brands fa-vimeo-v",
+        "link": "",
+        "active": false
+      },
+      "applepay": {
+        "account": "Apple Pay",
+        "icon": "fa-brands fa-apple-pay",
+        "link": "",
+        "active": false
+      },
+      "zelle": {
+        "account": "Zelle",
+        "icon": "fa-solid fa-money-bill-transfer",
+        "link": "",
+        "active": false
+      },
+      "bitcoin": {
+        "account": "Bitcoin",
+        "icon": "fa-brands fa-bitcoin",
+        "link": "",
+        "active": false
+      },
+      "ethereum": {
+        "account": "Ethereum",
+        "icon": "fa-brands fa-ethereum",
+        "link": "",
+        "active": false
+      },
+      "solana": {
+        "account": "Solana",
+        "icon": "fa-solid fa-diamond",
+        "link": "",
+        "active": false
+      }
+    }
+  }
+}

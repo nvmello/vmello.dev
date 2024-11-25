@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useColorContext } from "../context/ColorContext";
+import { useColorContext } from "../../context/ColorContext";
 import MyIcon from "./MyIcon";
 
 export const Section = ({ children }) => {
@@ -15,14 +15,22 @@ Section.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export const SectionHeader = ({ icon: icon, title, size = "text-xl" }) => {
+export const SectionHeader = ({ icon, title, size = "text-xl", children }) => {
   const { colorScheme } = useColorContext();
   return (
-    <div
-      className={`${colorScheme.title} flex items-center gap-3 mb-4 sm:mb-6 `}
-    >
-      <MyIcon icon={icon} size={size} />
-      <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">{title}</h1>
+    <div className="w-full">
+      <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-4">
+        <div className={`${colorScheme.title} flex gap-3`}>
+          <MyIcon icon={icon} size={size} />
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+            {title}
+          </h1>
+        </div>
+
+        <div className="w-fit">{children}</div>
+
+        <div></div>
+      </div>
     </div>
   );
 };
@@ -31,6 +39,7 @@ SectionHeader.propTypes = {
   icon: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   size: PropTypes.string,
+  children: PropTypes.node,
 };
 
 export const SectionContent = ({ children }) => {
