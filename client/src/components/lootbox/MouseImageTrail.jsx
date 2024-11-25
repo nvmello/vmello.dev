@@ -11,14 +11,14 @@ export const Example = () => {
       renderImageBuffer={50}
       rotationRange={25}
       images={[
-        "../../../public/photos/a.jpg",
-        "../../../public/photos/b.jpg",
-        "../../../public/photos/c.jpg",
-        "../../../public/photos/d.jpg",
-        "../../../public/photos/e.jpg",
-        "../../../public/photos/f.jpg",
-        "../../../public/photos/g.jpg",
-        "../../../public/photos/h.jpg",
+        "/public/photos/a.jpg",
+        "/public/photos/b.jpg",
+        "/public/photos/c.jpg",
+        "/public/photos/d.jpg",
+        "/public/photos/e.jpg",
+        "/public/photos/f.jpg",
+        "/public/photos/g.jpg",
+        "/public/photos/h.jpg",
       ]}
     >
       <section
