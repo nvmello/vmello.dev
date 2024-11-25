@@ -1,11 +1,11 @@
 import React from "react";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import SectionOne from "./components/SectionOne";
-import SectionTwo from "./components/SectionTwo";
-import SectionThree from "./components/SectionThree";
-import SectionFour from "./components/SectionFour";
-import { Section } from "./components/layout-components";
+import Navbar from "./components/nav/Navbar";
+import Footer from "./components/body/Footer";
+import SectionOne from "./components/body/SectionOne";
+import SectionTwo from "./components/body/SectionTwo";
+import SectionThree from "./components/body/SectionThree";
+import SectionFour from "./components/body/SectionFour";
+import { Section } from "./components/util/layout-components";
 import { useColorContext } from "./context/ColorContext";
 
 function App() {

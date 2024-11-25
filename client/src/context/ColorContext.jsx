@@ -14,10 +14,11 @@ const colorSchemes = {
     title: "text-[#ffffff]",
     logo: "text-[#FFFFFF]",
     hover: "hover:text-[#bed453] transition duration-500 ease-in-out",
-    bgHover: "hover:bg-[#bed453]",
+    bgHover: "bg-[#bed453]",
     shadow: "shadow-[#747574]",
     hoverShadow:
       "shadow-md hover:shadow-[#bed453] transition-shadow duration-500 ease-in-out",
+    borderAccent: "border-2 border-[#ffffff]",
     duotonePresets: {
       primary: "#FFFFFF",
       secondary: "#747574",
@@ -34,10 +35,11 @@ const colorSchemes = {
     title: "text-[#435D56]",
     logo: "text-[#435D56]",
     hover: "hover:text-[#B8D09A] transition duration-500 ease-in-out",
-    bgHover: "hover:bg-[#B8D09A]",
+    bgHover: "bg-[#B8D09A]",
     shadow: "shadow-[#949995]",
     hoverShadow:
       "shadow-md hover:shadow-[#B8D09A] transition-shadow duration-500 ease-in-out",
+    borderAccent: "border-2  border-[#435D56]",
     duotonePresets: {
       primary: "#B8D09A",
       secondary: "#435D56",
