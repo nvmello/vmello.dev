@@ -3,10 +3,10 @@ import { SectionHeader, SectionContent } from "../util/layout-components";
 import { ConnectionCard } from "../util/ConnectionCard";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { RevealLinks } from "./RevealLinks";
+import { RevealLinks } from "../lootbox/RevealLinks";
 import connections from "../../data/Connections.json";
 import { motion } from "framer-motion";
-import { SlideTabsExample } from "./Slidetabs";
+import { SlideTabsExample } from "../lootbox/Slidetabs";
 const responsive = {
   superLargeDesktop: {
     // the naming can be any, depends on you.
@@ -34,7 +34,7 @@ function SectionThree() {
         icon="fa-duotone fa-regular fa-chart-network"
         title="Let's Connect"
       >
-        <SlideTabsExample />
+        {/* <SlideTabsExample /> */}
       </SectionHeader>
       <SectionContent>
         {/* <RevealLinks></RevealLinks> */}
