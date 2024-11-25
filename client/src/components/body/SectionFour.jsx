@@ -1,6 +1,7 @@
 import { Camera } from "lucide-react";
 import { SectionHeader, SectionContent } from "../util/layout-components";
 import { useColorContext } from "../../context/ColorContext";
+import { Example } from "../lootbox/MouseImageTrail";
 
 function SectionFour() {
   const { colorScheme } = useColorContext();
@@ -12,7 +13,8 @@ function SectionFour() {
         title="Photography"
       />
       <SectionContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Example></Example>
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <p className="">Coming soon</p>
           </div>
@@ -31,7 +33,7 @@ function SectionFour() {
               className={`aspect-square ${colorScheme.bgFaded} rounded-lg`}
             ></div>
           </div>
-        </div>
+        </div> */}
       </SectionContent>
     </>
   );

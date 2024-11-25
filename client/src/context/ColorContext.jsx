@@ -18,6 +18,7 @@ const colorSchemes = {
     shadow: "shadow-[#747574]",
     hoverShadow:
       "shadow-md hover:shadow-[#bed453] transition-shadow duration-500 ease-in-out",
+    borderAccent: "border-2 border-[#ffffff]",
     duotonePresets: {
       primary: "#FFFFFF",
       secondary: "#747574",
@@ -38,6 +39,7 @@ const colorSchemes = {
     shadow: "shadow-[#949995]",
     hoverShadow:
       "shadow-md hover:shadow-[#B8D09A] transition-shadow duration-500 ease-in-out",
+    borderAccent: "border-2  border-[#435D56]",
     duotonePresets: {
       primary: "#B8D09A",
       secondary: "#435D56",
