@@ -74,6 +74,34 @@ const MouseImageTrail = ({
       renderNextImage(relativeX, relativeY);
     }
   };
+  const handleTouchStart = (e) => {
+    e.preventDefault();
+  };
+
+  const handleTouchMove = (e) => {
+    const touch = e.touches[0];
+
+    // Get the container's position relative to the viewport
+    const rect = scope.current.getBoundingClientRect();
+
+    // Calculate mouse position relative to the container
+    const relativeX = touch.clientX - rect.left;
+    const relativeY = touch.clientY - rect.top;
+
+    const distance = calculateDistance(
+      relativeX,
+      relativeY,
+      lastRenderPosition.current.x,
+      lastRenderPosition.current.y
+    );
+
+    if (distance >= renderImageBuffer) {
+      lastRenderPosition.current.x = relativeX;
+      lastRenderPosition.current.y = relativeY;
+
+      renderNextImage(relativeX, relativeY);
+    }
+  };
 
   const calculateDistance = (x1, y1, x2, y2) => {
     const deltaX = x2 - x1;
@@ -133,8 +161,10 @@ const MouseImageTrail = ({
     <div className="grid w-full grid-rows-[50vh_auto]">
       <div
         ref={scope}
-        className="relative overflow-hidden"
+        className="relative overflow-hidden touch-none select-none"
         onMouseMove={handleMouseMove}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
       >
         {children}
 

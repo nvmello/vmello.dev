@@ -7,4 +7,8 @@ export default defineConfig({
   optimizeDeps: {
     force: true,
   },
+  server: {
+    host: true, // Expose to all network interfaces
+    port: 5173,
+  },
 });
