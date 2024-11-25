@@ -17,6 +17,7 @@
     "concurrently": "^8.0.0"
   },
   "dependencies": {
+    "framer-motion": "^11.11.17",
     "react-multi-carousel": "^2.8.5"
   }
 }
