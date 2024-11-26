@@ -14,8 +14,9 @@ function SectionOne() {
         </p>
         <p>
           Born in the desert, I currently reside in Tucson, Arizona. Outside of
-          work, you'll find me at a local cafe, at a music festival, or
-          exploring Sonoran trails with my camera. Always up for an adventure.
+          work, you'll find me hanging at a local cafe, dancing at a music
+          festival, or exploring Sonoran trails with my camera. Always up for an
+          adventure.
         </p>
       </SectionContent>
     </>

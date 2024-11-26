@@ -139,7 +139,7 @@ const MouseImageTrail = ({
               ? `rotate(${rotation}deg)`
               : `rotate(-${rotation}deg)`
           }`,
-          `translate(-50%, -50%) scale(1) ${
+          `translate(-50%, -50%) scale(1.25) ${
             imageIndex % 2
               ? `rotate(-${rotation}deg)`
               : `rotate(${rotation}deg)`
