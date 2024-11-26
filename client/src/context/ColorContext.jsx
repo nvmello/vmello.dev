@@ -8,11 +8,12 @@ const ColorContext = createContext();
 const colorSchemes = {
   dark: {
     bg: "bg-[#000000]",
-    bgFaded: "bg-[#747574]",
+    bgFaded: "bg-[#2e2e2e]",
     gradientColor: "#000000",
     text: "text-[#747574]",
     title: "text-[#ffffff]",
     logo: "text-[#FFFFFF]",
+    accent: "text-[#bed453]",
     hover: "hover:text-[#bed453] transition duration-500 ease-in-out",
     bgHover: "bg-[#bed453]",
     shadow: "shadow-[#747574]",
@@ -34,6 +35,7 @@ const colorSchemes = {
     text: "text-[#949995]",
     title: "text-[#435D56]",
     logo: "text-[#435D56]",
+    accent: "text-[#B8D09A]",
     hover: "hover:text-[#B8D09A] transition duration-500 ease-in-out",
     bgHover: "bg-[#B8D09A]",
     shadow: "shadow-[#949995]",

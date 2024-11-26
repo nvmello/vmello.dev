@@ -54,8 +54,8 @@
       "chess": {
         "account": "Chess.com",
         "icon": "fa-solid fa-chess",
-        "link": "",
-        "active": false
+        "link": "https://www.chess.com/member/vmell0",
+        "active": true
       }
     },
     "payments": {
@@ -93,7 +93,7 @@
         "account": "Bitcoin",
         "icon": "fa-brands fa-bitcoin",
         "link": "",
-        "active": false
+        "active": true
       },
       "ethereum": {
         "account": "Ethereum",
@@ -103,9 +103,9 @@
       },
       "solana": {
         "account": "Solana",
-        "icon": "fa-solid fa-diamond",
+        "icon": "fa-kit fa-solana",
         "link": "",
-        "active": false
+        "active": true
       }
     }
   }
