@@ -145,9 +145,9 @@ const LinkBox = ({ icon, link, label }) => {
         style={{
           clipPath: BOTTOM_RIGHT_CLIP,
         }}
-        className={`absolute inset-0 grid place-content-center ${colorScheme.bgFaded} ${colorScheme.accent}`}
+        className={`absolute inset-0 grid place-content-center ${colorScheme.bgHover}`}
       >
-        <MyIcon icon={icon} size="text-xl sm:text-3xl md:text-4xl" />
+        <MyIcon icon={icon} size="text-xl sm:text-3xl md:text-4xl text-black" />
       </div>
     </a>
   );
