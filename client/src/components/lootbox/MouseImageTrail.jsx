@@ -22,7 +22,6 @@ export const Example = () => {
         "/photos/h.jpg",
       ]}
     >
-      <i class=""></i>
       <section
         className={`grid h-[50vh] w-full place-content-center rounded-lg ${colorScheme.bg} ${colorScheme.borderAccent}`}
       >

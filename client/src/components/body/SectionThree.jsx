@@ -7,6 +7,8 @@ import { RevealLinks } from "../lootbox/RevealLinks";
 import connections from "../../data/Connections.json";
 import { motion } from "framer-motion";
 import { SlideTabsExample } from "../lootbox/Slidetabs";
+import { ClipPathLinks } from "../lootbox/ClipPathLinks";
+
 const responsive = {
   superLargeDesktop: {
     // the naming can be any, depends on you.
@@ -38,7 +40,8 @@ function SectionThree() {
       </SectionHeader>
       <SectionContent>
         {/* <RevealLinks></RevealLinks> */}
-        <Carousel
+        <ClipPathLinks></ClipPathLinks>
+        {/* <Carousel
           className="flex items-center p-5 "
           responsive={responsive}
           swipeable={true}
@@ -63,7 +66,7 @@ function SectionThree() {
           <ConnectionCard
             data={connections.accounts.social.steam}
           ></ConnectionCard>
-        </Carousel>
+        </Carousel> */}
       </SectionContent>
     </>
   );
