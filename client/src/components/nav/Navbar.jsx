@@ -12,7 +12,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`${colorScheme.bg} fixed w-full top-0 left-0 shadow-md`}>
+    <nav
+      className={`${colorScheme.bg} fixed z-50 w-full top-0 left-0 shadow-md`}
+    >
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
