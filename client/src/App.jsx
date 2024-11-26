@@ -15,29 +15,37 @@ function App() {
       <Navbar />
       <div className="container mx-auto overflow-y-auto">
         <hr className="mt-16" />
-        <section className="min-h-[35vh] overflow-y-auto">
-          <Section>
-            <SectionOne />
-          </Section>
-        </section>
+        <div id="about">
+          <section className="min-h-[35vh] overflow-y-auto">
+            <Section>
+              <SectionOne />
+            </Section>
+          </section>
+        </div>
         <hr />
-        <section className="min-h-[35vh] overflow-y-auto">
-          <Section>
-            <SectionTwo />
-          </Section>
-        </section>
+        <div id="projects">
+          <section className="min-h-[35vh] overflow-y-auto">
+            <Section>
+              <SectionTwo />
+            </Section>
+          </section>
+        </div>
         <hr />
-        <section className="min-h-[35vh] overflow-y-auto">
-          <Section>
-            <SectionThree />
-          </Section>
-        </section>
+        <div id="connect">
+          <section className="min-h-[35vh] overflow-y-auto">
+            <Section>
+              <SectionThree />
+            </Section>
+          </section>
+        </div>
         <hr />
-        <section className="min-h-[35vh] overflow-y-auto">
-          <Section>
-            <SectionFour />
-          </Section>
-        </section>
+        <div id="photography">
+          <section className="min-h-[35vh] overflow-y-auto">
+            <Section>
+              <SectionFour />
+            </Section>
+          </section>
+        </div>
       </div>
       <hr />
       <div className={colorScheme.bg}>
