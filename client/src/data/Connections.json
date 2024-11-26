@@ -27,11 +27,17 @@
         "link": "https://www.instagram.com/nickvmorello/",
         "active": true
       },
+      "twitter": {
+        "account": "Twitter",
+        "icon": "fa-brands fa-x-twitter",
+        "link": "https://x.com/v_mello_",
+        "active": true
+      },
       "snapchat": {
         "account": "Snap",
         "icon": "fa-brands fa-snapchat",
         "link": "https://www.snapchat.com/add/nvmello",
-        "active": true
+        "active": false
       },
       "epic": {
         "account": "Epic Games",

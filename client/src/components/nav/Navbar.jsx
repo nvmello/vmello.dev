@@ -30,10 +30,19 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            <MyIcon icon="fa-duotone fa-solid fa-user" />
-            <MyIcon icon="fa-duotone fa-solid fa-display-code" />
-            <MyIcon icon="fa-duotone fa-regular fa-camera" />
-            <MyIcon icon="fa-duotone fa-regular fa-chart-network" />
+            <MyIcon link="#about" icon="fa-duotone fa-solid fa-user" />
+            <MyIcon
+              link="#projects"
+              icon="fa-duotone fa-solid fa-display-code"
+            />
+            <MyIcon
+              link="#connect"
+              icon="fa-duotone fa-regular fa-chart-network"
+            />
+            <MyIcon
+              link="#photography"
+              icon="fa-duotone fa-regular fa-camera"
+            />
           </div>
 
           {/* Mobile Menu Button */}

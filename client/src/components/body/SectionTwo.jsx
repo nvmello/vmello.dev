@@ -3,7 +3,10 @@ import { SectionHeader, SectionContent } from "../util/layout-components"; // Yo
 function SectionTwo() {
   return (
     <>
-      <SectionHeader icon="fa-duotone fa-solid fa-display-code" title="Work" />
+      <SectionHeader
+        icon="fa-duotone fa-solid fa-display-code"
+        title="Projects"
+      />
       <SectionContent>
         <p>Coming soon</p>
       </SectionContent>

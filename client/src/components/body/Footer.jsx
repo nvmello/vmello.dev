@@ -4,9 +4,11 @@ function Footer() {
 
   return (
     <footer>
-      <div className=" text-center text-sm leading-relaxed">
+      <div className=" text-center text-sm leading-relaxed p-5">
         <a
-          className={`${colorScheme.hover}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`${colorScheme.hover} ${colorScheme.logo}`}
           href="mailto:nicholas@vmello.dev?subject=Hey handsome ;)"
         >
           nicholas@vmello.dev
