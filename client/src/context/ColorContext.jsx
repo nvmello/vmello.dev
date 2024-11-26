@@ -9,6 +9,7 @@ const colorSchemes = {
   dark: {
     bg: "bg-[#000000]",
     bgFaded: "bg-[#2e2e2e]",
+    textBg: "text-[#000000]",
     gradientColor: "#000000",
     text: "text-[#747574]",
     title: "text-[#ffffff]",
@@ -31,6 +32,7 @@ const colorSchemes = {
   light: {
     bg: "bg-[#F8F9F6]",
     bgFaded: "bg-[#949995]",
+    textBg: "text-[#F8F9F6]",
     gradientColor: "#F8F9F6",
     text: "text-[#949995]",
     title: "text-[#435D56]",
