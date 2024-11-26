@@ -1,4 +1,5 @@
-import { SectionHeader, SectionContent } from "../util/layout-components"; // You'll need to export these
+import { SectionHeader, SectionContent } from "../util/layout-components";
+import EncryptWrapper from "../lootbox/EncryptAnimate"; // Changed to default import
 
 function SectionTwo() {
   return (
@@ -8,7 +9,7 @@ function SectionTwo() {
         title="Projects"
       />
       <SectionContent>
-        <p>Coming soon</p>
+        <EncryptWrapper />
       </SectionContent>
     </>
   );
