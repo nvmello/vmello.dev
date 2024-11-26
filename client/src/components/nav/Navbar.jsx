@@ -11,6 +11,10 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleLinkClick = () => {
+    setIsOpen(false); // Close the menu when a link is clicked
+  };
+
   return (
     <nav
       className={`${colorScheme.bg} fixed z-50 w-full top-0 left-0 shadow-md`}
@@ -61,29 +65,32 @@ const Navbar = () => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <a
-                href="#"
+                href="#about"
+                onClick={handleLinkClick}
                 className={`block px-3 py-2 ${colorScheme.title} ${colorScheme.hover}`}
               >
                 About
               </a>
               <a
-                href="#"
+                href="#projects"
+                onClick={handleLinkClick}
                 className={`block px-3 py-2 ${colorScheme.title} ${colorScheme.hover}`}
               >
-                {" "}
-                Code{" "}
+                Projects
               </a>
               <a
-                href="#"
+                href="#connect"
+                onClick={handleLinkClick}
+                className={`block px-3 py-2 ${colorScheme.title} ${colorScheme.hover}`}
+              >
+                Connect
+              </a>
+              <a
+                href="#photography"
+                onClick={handleLinkClick}
                 className={`block px-3 py-2 ${colorScheme.title} ${colorScheme.hover}`}
               >
                 Photography
-              </a>
-              <a
-                href="#"
-                className={`block px-3 py-2 ${colorScheme.title} ${colorScheme.hover}`}
-              >
-                Contact
               </a>
             </div>
           </div>
