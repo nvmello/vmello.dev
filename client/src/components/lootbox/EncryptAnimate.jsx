@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { FiLock } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { useColorContext } from "../../context/ColorContext";
 
 // Renamed the wrapper component to EncryptWrapper
 const EncryptWrapper = () => {
@@ -52,6 +53,7 @@ const EncryptDiv = () => {
     clearInterval(intervalRef.current || undefined);
     setText(TARGET_TEXT);
   };
+  const { colorScheme } = useColorContext();
 
   return (
     <motion.div
@@ -63,7 +65,7 @@ const EncryptDiv = () => {
       }}
       onMouseEnter={scramble}
       onMouseLeave={stopScramble}
-      className="group relative overflow-hidden rounded-lg border-[1px] border-neutral-500  px-4 py-2 font-mono font-medium uppercase text-neutral-300 transition-colors hover:text-indigo-300"
+      className={`group relative overflow-hidden rounded-lg border-[1px] ${colorScheme.borderAccent}  px-4 py-2 font-mono font-medium uppercase ${colorScheme.title} transition-colors ${colorScheme.bg} `}
     >
       <div className="relative z-10 flex items-center gap-2">
         <FiLock />
@@ -82,7 +84,7 @@ const EncryptDiv = () => {
           duration: 1,
           ease: "linear",
         }}
-        className="duration-300 absolute inset-0 z-0 scale-125 bg-gradient-to-t from-indigo-400/0 from-40% via-indigo-400/100 to-indigo-400/0 to-60% opacity-0 transition-opacity group-hover:opacity-100"
+        className={`${colorScheme.laser}`}
       />
     </motion.div>
   );

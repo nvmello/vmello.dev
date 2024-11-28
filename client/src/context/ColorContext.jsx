@@ -18,6 +18,8 @@ const colorSchemes = {
     hover: "hover:text-[#bed453] transition duration-500 ease-in-out",
     bgHover: "bg-[#bed453]",
     shadow: "shadow-[#747574]",
+    laser:
+      "duration-300 absolute inset-0 z-0 scale-125 bg-gradient-to-t from-[#bed453]/0 from-40% via-[#bed453]/100 to-[#bed453]/0 to-60% opacity-0 transition-opacity group-hover:opacity-100",
     hoverShadow:
       "shadow-md hover:shadow-[#bed453] transition-shadow duration-500 ease-in-out",
     borderAccent: "border-2 border-[#ffffff]",
@@ -40,6 +42,8 @@ const colorSchemes = {
     accent: "text-[#B8D09A]",
     hover: "hover:text-[#B8D09A] transition duration-500 ease-in-out",
     bgHover: "bg-[#B8D09A]",
+    laser:
+      "duration-300 absolute inset-0 z-0 scale-125 bg-gradient-to-t from-[#B8D09A]/0 from-40% via-[#B8D09A]/100 to-[#B8D09A]/0 to-60% opacity-0 transition-opacity group-hover:opacity-100",
     shadow: "shadow-[#949995]",
     hoverShadow:
       "shadow-md hover:shadow-[#B8D09A] transition-shadow duration-500 ease-in-out",
