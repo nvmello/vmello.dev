@@ -32,32 +32,32 @@ function WorkoutData() {
    * Fetches the most recent workout data from the REST API.
    * This serves as the initial data load before WebSocket updates begin.
    */
-  const fetchLatestWorkout = async () => {
-    try {
-      const response = await fetch(import.meta.env.VITE_API_URL);
+  // const fetchLatestWorkout = async () => {
+  //   try {
+  //     const response = await fetch(import.meta.env.VITE_API_URL);
 
-      if (!response.ok) {
-        throw new Error(
-          `Network response was not ok. Status: ${response.status}`
-        );
-      }
+  //     if (!response.ok) {
+  //       throw new Error(
+  //         `Network response was not ok. Status: ${response.status}`
+  //       );
+  //     }
 
-      const data = await response.json();
+  //     const data = await response.json();
 
-      // If data exists, take the first workout (most recent)
-      if (data && data.length > 0) {
-        setWorkouts(data[0]);
-      } else {
-        setError("No workout data found");
-      }
-    } catch (error) {
-      setError(error.message);
-      console.error("Error fetching workout data:", error);
-    } finally {
-      // Always set loading to false, whether successful or not
-      setIsLoading(false);
-    }
-  };
+  //     // If data exists, take the first workout (most recent)
+  //     if (data && data.length > 0) {
+  //       setWorkouts(data[0]);
+  //     } else {
+  //       setError("No workout data found");
+  //     }
+  //   } catch (error) {
+  //     setError(error.message);
+  //     console.error("Error fetching workout data:", error);
+  //   } finally {
+  //     // Always set loading to false, whether successful or not
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const fetchTodaysWorkouts = async () => {
     try {
@@ -98,11 +98,19 @@ function WorkoutData() {
         }
       });
 
+      //remove duplicate workouts  ** may want to revert this later to show all workouts **
       if (todaysWorkouts.length > 0) {
-        todaysWorkouts.sort(
+        const uniqueWorkouts = todaysWorkouts.reduce((unique, workout) => {
+          if (!unique.find((w) => w.type === workout.type)) {
+            unique.push(workout);
+          }
+          return unique;
+        }, []);
+
+        uniqueWorkouts.sort(
           (a, b) => new Date(b.end_date) - new Date(a.end_date)
         );
-        setWorkouts(todaysWorkouts);
+        setWorkouts(uniqueWorkouts);
       } else {
         console.log("No workouts found for today");
       }
