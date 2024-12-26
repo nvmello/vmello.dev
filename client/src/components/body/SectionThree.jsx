@@ -1,12 +1,5 @@
-import { Network } from "lucide-react";
 import { SectionHeader, SectionContent } from "../util/layout-components";
-import { ConnectionCard } from "../util/ConnectionCard";
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
-import { RevealLinks } from "../lootbox/RevealLinks";
-import connections from "../../data/Connections.json";
-import { motion } from "framer-motion";
-import { SlideTabsExample } from "../lootbox/Slidetabs";
+
 import { ClipPathLinks } from "../lootbox/ClipPathLinks";
 
 const responsive = {

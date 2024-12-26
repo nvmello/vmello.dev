@@ -1,4 +1,3 @@
-import { CircleUser } from "lucide-react";
 import { SectionHeader, SectionContent } from "../util/layout-components";
 
 function SectionOne() {
