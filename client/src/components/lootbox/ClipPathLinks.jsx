@@ -47,7 +47,7 @@ export const ClipPathLinks = () => {
       </div>
 
       {/* Payments Row */}
-      <div className="grid grid-cols-3 divide-x divide-neutral-900">
+      {/* <div className="grid grid-cols-3 divide-x divide-neutral-900">
         {payments.slice(0, 3).map((item, index) => (
           <LinkBox
             key={item.account}
@@ -56,7 +56,7 @@ export const ClipPathLinks = () => {
             label={item.account}
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
