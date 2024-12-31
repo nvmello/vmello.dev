@@ -12,7 +12,6 @@ export const Example = () => {
       renderImageBuffer={50}
       rotationRange={25}
       images={[
-        "/photos/cuties.jpg",
         "/photos/succ.jpg",
         "/photos/dragonfly.jpg",
         "/photos/laPatio.jpg",

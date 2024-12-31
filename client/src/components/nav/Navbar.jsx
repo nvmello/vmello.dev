@@ -1,18 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MyMarquee from "./MyMarquee";
 import NvmLogo from "./NvmLogo";
 import { useColorContext } from "../../context/ColorContext";
 import MyIcon from "../util/MyIcon";
+import { gsap } from "gsap";
+
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+
+gsap.registerPlugin(ScrollToPlugin);
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { colorScheme, changeTheme } = useColorContext();
+
+  useEffect(() => {
+    // Handle initial hash on page load
+    scrollToHash(window.location.hash);
+
+    // Add event listeners to all links
+    document.querySelectorAll("a[href]").forEach((a) => {
+      a.addEventListener("click", (e) => {
+        scrollToHash(getSamePageAnchor(a), e);
+      });
+    });
+  }, []);
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleLinkClick = () => {
-    setIsOpen(false); // Close the menu when a link is clicked
+  const handleLinkClick = (e) => {
+    // Get the hash from the clicked link's href
+    const hash = e.currentTarget.getAttribute("href");
+    // Scroll to the section
+    scrollToHash(hash, e);
+    // Close the menu
+    setIsOpen(false);
   };
 
   return (
@@ -101,3 +123,30 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+// Detect if a link's href goes to the current page
+function getSamePageAnchor(link) {
+  if (
+    link.protocol !== window.location.protocol ||
+    link.host !== window.location.host ||
+    link.pathname !== window.location.pathname ||
+    link.search !== window.location.search
+  ) {
+    return false;
+  }
+
+  return link.hash;
+}
+
+// Scroll to a given hash, preventing the event given if there is one
+const scrollToHash = (hash, e) => {
+  const elem = hash ? document.querySelector(hash) : false;
+  if (elem) {
+    if (e) e.preventDefault();
+    gsap.to(window, {
+      scrollTo: { y: elem, offsetY: 70 },
+      ease: "power2.inOut",
+      duration: 1,
+    });
+  }
+};
