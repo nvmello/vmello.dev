@@ -61,10 +61,11 @@ function WorkoutData() {
 
   const fetchTodaysWorkouts = async () => {
     try {
-      // Check if API URL is configured
-      if (!import.meta.env.VITE_API_URL) {
-        console.warn("API URL not configured, using test data");
-        throw new Error("API URL not configured");
+      // Check if API URL is configured and not localhost in production
+      if (!import.meta.env.VITE_API_URL || 
+          (import.meta.env.PROD && import.meta.env.VITE_API_URL.includes('localhost'))) {
+        console.warn("API URL not configured or using localhost in production");
+        throw new Error("API URL not configured for production");
       }
 
       const response = await fetch(import.meta.env.VITE_API_URL);
