@@ -8,26 +8,26 @@ const ColorContext = createContext();
 const colorSchemes = {
   dark: {
     bg: "bg-[#000000]",
-    bgFaded: "bg-[#2e2e2e]",
+    bgFaded: "bg-[#050505]",
     textBg: "text-[#000000]",
     gradientColor: "#000000",
-    text: "text-[#747574]",
+    text: "text-[#6b7280]",
     title: "text-[#ffffff]",
     logo: "text-[#FFFFFF]",
-    accent: "text-[#bed453]",
-    hover: "hover:text-[#bed453] transition duration-500 ease-in-out",
-    bgHover: "bg-[#bed453]",
-    shadow: "shadow-[#747574]",
+    accent: "text-[#00ff00]",
+    hover: "hover:text-[#00ff00] transition duration-500 ease-in-out",
+    bgHover: "bg-[#00ff00]",
+    shadow: "shadow-[#111111]",
     laser:
-      "duration-300 absolute inset-0 z-0 scale-125 bg-gradient-to-t from-[#bed453]/0 from-40% via-[#bed453]/100 to-[#bed453]/0 to-60% opacity-0 transition-opacity group-hover:opacity-100",
+      "duration-300 absolute inset-0 z-0 scale-125 bg-gradient-to-t from-[#00ff00]/0 from-40% via-[#00ff00]/100 to-[#00ff00]/0 to-60% opacity-0 transition-opacity group-hover:opacity-100",
     hoverShadow:
-      "shadow-md hover:shadow-[#bed453] transition-shadow duration-500 ease-in-out",
-    borderAccent: "border-2 border-[#ffffff]",
+      "shadow-md hover:shadow-[#00ff00] transition-shadow duration-500 ease-in-out",
+    borderAccent: "border-2 border-[#00ff00]",
     duotonePresets: {
       primary: "#FFFFFF",
-      secondary: "#747574",
-      hoverPrimary: "#bed453",
-      hoverSecondary: "#747574",
+      secondary: "#6b7280",
+      hoverPrimary: "#00ff00",
+      hoverSecondary: "#111111",
     },
   },
 

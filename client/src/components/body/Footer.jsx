@@ -9,7 +9,7 @@ function Footer() {
           target="_blank"
           rel="noopener noreferrer"
           className={`${colorScheme.hover} ${colorScheme.logo}`}
-          href="mailto:nicholas@vmello.dev?subject=Hey handsome ;)"
+          href="mailto:nicholas@vmello.dev"
         >
           nicholas@vmello.dev
         </a>

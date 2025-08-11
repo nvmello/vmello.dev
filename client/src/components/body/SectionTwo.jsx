@@ -1,5 +1,5 @@
 import { SectionHeader, SectionContent } from "../util/layout-components";
-import EncryptWrapper from "../lootbox/EncryptAnimate"; // Changed to default import
+import { ProjectsShowcase } from "./ProjectsShowcase";
 
 function SectionTwo() {
   return (
@@ -9,7 +9,7 @@ function SectionTwo() {
         title="Projects"
       />
       <SectionContent>
-        <EncryptWrapper />
+        <ProjectsShowcase />
       </SectionContent>
     </>
   );

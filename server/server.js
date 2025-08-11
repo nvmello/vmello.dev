@@ -223,6 +223,8 @@ async function createWorkoutHandler(req, res) {
 
     const workoutData = {
       ...req.body,
+      start_date: new Date(req.body.start_date),
+      end_date: new Date(req.body.end_date),
       created_at: new Date(),
       updated_at: new Date(),
     };
@@ -264,7 +266,7 @@ async function getWorkoutsHandler(req, res) {
     const workouts = client.db(DB_NAME).collection("workouts");
     const results = await workouts
       .find()
-      .sort({ end_date: -1 })
+      .sort({ created_at: -1, end_date: -1 })
       .limit(20)
       .toArray();
 
