@@ -185,11 +185,22 @@ function broadcastNewWorkout(workout) {
  */
 async function connectToDatabase() {
   try {
+    console.log("🔄 Attempting to connect to MongoDB...");
+    console.log("📍 Connection string:", MONGODB_URI ? "Configured" : "Missing");
+    
     await client.connect();
     console.log("✅ Successfully connected to MongoDB.");
-    return client.db(DB_NAME);
+    
+    // Test the connection
+    const db = client.db(DB_NAME);
+    const collections = await db.listCollections().toArray();
+    console.log(`📊 Database '${DB_NAME}' has ${collections.length} collections`);
+    
+    return db;
   } catch (error) {
-    console.error("❌ Database connection error:", error);
+    console.error("❌ Database connection error:", error.message);
+    console.error("Full error details:", error);
+    throw error; // Re-throw to prevent server from starting with broken DB
   }
 }
 
@@ -223,6 +234,8 @@ async function createWorkoutHandler(req, res) {
 
     const workoutData = {
       ...req.body,
+      start_date: new Date(req.body.start_date),
+      end_date: new Date(req.body.end_date),
       created_at: new Date(),
       updated_at: new Date(),
     };
@@ -264,7 +277,7 @@ async function getWorkoutsHandler(req, res) {
     const workouts = client.db(DB_NAME).collection("workouts");
     const results = await workouts
       .find()
-      .sort({ end_date: -1 })
+      .sort({ created_at: -1, end_date: -1 })
       .limit(20)
       .toArray();
 
