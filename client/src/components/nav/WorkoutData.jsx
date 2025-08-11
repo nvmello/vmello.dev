@@ -61,9 +61,9 @@ function WorkoutData() {
 
   const fetchTodaysWorkouts = async () => {
     try {
-      // In production, use relative API path; in development, use environment variable
-      const apiUrl = import.meta.env.PROD 
-        ? '/api/workouts' 
+      // Use Railway production API or local development API
+      const apiUrl = import.meta.env.MODE === 'production'
+        ? 'https://vmellodev-production.up.railway.app/api/workouts' 
         : import.meta.env.VITE_API_URL;
 
       if (!apiUrl) {
