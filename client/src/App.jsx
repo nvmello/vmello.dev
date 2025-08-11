@@ -46,13 +46,13 @@ function App() {
             </section>
           </div>
           <hr />
-          <div id="photography">
+          {/* <div id="photography">
             <section className="min-h-[35vh] overflow-y-auto">
               <Section>
                 <SectionFour />
               </Section>
             </section>
-          </div>
+          </div> */}
         </div>
         <hr />
         <div className={colorScheme.bg}>

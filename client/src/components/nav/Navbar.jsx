@@ -65,10 +65,6 @@ const Navbar = () => {
               link="#connect"
               icon="fa-duotone fa-regular fa-chart-network"
             />
-            <MyIcon
-              link="#photography"
-              icon="fa-duotone fa-regular fa-camera"
-            />
           </div>
 
           {/* Mobile Menu Button */}
@@ -106,13 +102,6 @@ const Navbar = () => {
                 className={`block px-3 py-2 ${colorScheme.title} ${colorScheme.hover}`}
               >
                 Connect
-              </a>
-              <a
-                href="#photography"
-                onClick={handleLinkClick}
-                className={`block px-3 py-2 ${colorScheme.title} ${colorScheme.hover}`}
-              >
-                Photography
               </a>
             </div>
           </div>

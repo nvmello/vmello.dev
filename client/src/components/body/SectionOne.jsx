@@ -6,15 +6,15 @@ function SectionOne() {
       <SectionHeader icon="fa-duotone fa-solid fa-user" title="About me" />
       <SectionContent>
         <p>
-          Hey there, I'm Nick. My journey into tech began in 2017 when I picked
-          up my first book on Python. That spark led me to pursue Computer
-          Science at Arizona State University, and today I'm building solutions
-          as a software engineer at a Fortune 100 company.
+          I&apos;m Nick, a software engineer who loves translating ideas into solutions. 
+          I&apos;m fascinated by AI and how it&apos;s reshaping how we communicate intent and solve problems.
         </p>
         <p>
-          Born in the desert, I currently reside in Tucson, Arizona. Outside of
-          work, you'll find me hanging at a local cafe, lifting weights, or
-          exploring Sonoran trails with my camera. Always up for an adventure.
+          When I&apos;m not building systems, you&apos;ll find me rock climbing, lifting weights, 
+          or exploring new places with my camera. I studied Computer Science at Arizona State University.
+        </p>
+        <p>
+          Let&apos;s connect.
         </p>
       </SectionContent>
     </>

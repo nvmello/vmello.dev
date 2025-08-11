@@ -50,15 +50,17 @@ function MyMarquee() {
           - gradient={false} disables default gradients in favor of our custom ones
           - speed={30} sets a comfortable scrolling pace
           - pauseOnHover improves user experience by allowing content inspection */}
-      <Marquee pauseOnHover gradient={false} speed={30}>
-        {/* Content containers with consistent spacing
-            - space-x-40 provides generous spacing between items
-            - ml-20 mr-20 adds margin to prevent content from touching gradients */}
-        <div className="flex items-center space-x-40 ml-20 mr-20">
+      <Marquee pauseOnHover gradient={false} speed={25}>
+        {/* Content containers with even spacing */}
+        <div className="flex items-center ml-20 mr-16">
           <Spotify />
         </div>
-        <div className="flex items-center space-x-40 ml-20 mr-20">
+        <div className="flex items-center ml-16 mr-16">
           <WorkoutData />
+        </div>
+        <div className="flex items-center ml-16 mr-20">
+          {/* Spacer for continuous flow */}
+          <div className="w-8"></div>
         </div>
       </Marquee>
     </div>
