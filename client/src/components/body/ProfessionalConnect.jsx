@@ -22,7 +22,7 @@ export const ProfessionalConnect = () => {
     {
       account: "Email",
       icon: "fa-solid fa-envelope",
-      link: "mailto:nick@vmello.dev",
+      link: "mailto:nicholas@vmello.dev",
       description: "Get In Touch"
     }
   ];
