@@ -32,6 +32,9 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0D1296C52EBD354B008873D0 /* nvmMusic */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				0D1296E82EBD3600008873D0 /* PBXFileSystemSynchronizedBuildFileExceptionSet */,
+			);
 			path = nvmMusic;
 			sourceTree = "<group>";
 		};
@@ -44,6 +47,13 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = nvmMusicUITests;
 			sourceTree = "<group>";
+		};
+		0D1296E82EBD3600008873D0 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 0D1296C22EBD354B008873D0 /* nvmMusic */;
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
