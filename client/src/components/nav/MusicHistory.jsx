@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef, useContext } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
-import { ColorContext } from '../../context/ColorContext';
+import { useColorContext } from '../../context/ColorContext';
 
 /**
  * MusicHistory Component
@@ -21,7 +21,8 @@ const MusicHistory = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const wsRef = useRef(null);
-  const { color } = useContext(ColorContext);
+  const { colorScheme } = useColorContext();
+  const color = colorScheme.accent.replace('text-[', '').replace(']', ''); // Extract hex color
 
   // API and WebSocket URLs
   const API_URL = import.meta.env.VITE_MUSIC_API_URL || 'http://localhost:3000/api/listening-history';
