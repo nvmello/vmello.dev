@@ -7,6 +7,7 @@
 
 import Foundation
 import MusicKit
+import Combine
 
 class MusicBackend: ObservableObject {
     @Published var authorizationStatus: MusicAuthorization.Status = .notDetermined
@@ -200,7 +201,7 @@ class MusicBackend: ObservableObject {
         encoder.dateEncodingStrategy = .iso8601
         request.httpBody = try encoder.encode(record)
 
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (_, response) = try await URLSession.shared.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
