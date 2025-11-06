@@ -23,7 +23,8 @@ class MusicBackend: ObservableObject {
     private var lastProcessedTrackID: String?
 
     // Backend API configuration
-    private let apiURL = "https://vmellodev-production.up.railway.app/api/listening-history"
+    // Use localhost for testing (change to Railway URL for production)
+    private let apiURL = "http://192.168.0.118:3000/api/listening-history"
 
     init() {
         checkAuthorizationStatus()
