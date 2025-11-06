@@ -1,11 +1,11 @@
 import Marquee from "react-fast-marquee";
-import Spotify from "./Spotify";
+import MusicHistory from "./MusicHistory";
 import WorkoutData from "./WorkoutData";
 import { useColorContext } from "../../context/ColorContext";
 
 /**
  * MyMarquee Component
- * A scrolling marquee component that displays Spotify and workout data with custom gradient overlays.
+ * A scrolling marquee component that displays music history and workout data with custom gradient overlays.
  * Uses react-fast-marquee for smooth scrolling and custom gradients for better mobile responsiveness.
  *
  * Features:
@@ -53,7 +53,7 @@ function MyMarquee() {
       <Marquee pauseOnHover gradient={false} speed={25}>
         {/* Content containers with even spacing */}
         <div className="flex items-center ml-20 mr-16">
-          <Spotify />
+          <MusicHistory />
         </div>
         <div className="flex items-center ml-16 mr-16">
           <WorkoutData />
