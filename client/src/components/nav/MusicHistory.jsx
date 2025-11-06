@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo, memo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
 import { useColorContext } from '../../context/ColorContext';
@@ -133,8 +133,8 @@ const MusicHistory = () => {
     );
   };
 
-  // Get external link (Spotify or Apple Music)
-  const getExternalLink = () => {
+  // Memoize external link to prevent recalculation
+  const externalLink = useMemo(() => {
     if (!currentTrack) return null;
 
     if (currentTrack.spotify_uri) {
@@ -144,9 +144,23 @@ const MusicHistory = () => {
     }
 
     return null;
-  };
+  }, [currentTrack]);
 
-  const externalLink = getExternalLink();
+  // Memoize track display to prevent recalculation
+  const trackDisplay = useMemo(() => {
+    if (isLoading) return 'Loading...';
+    if (error) return error;
+    if (!currentTrack) return 'No recent tracks';
+
+    const label = isNowPlaying(currentTrack.timestamp) ? 'Now Playing:' : 'Recently Played:';
+    const trackInfo = `${currentTrack.track_name} - ${currentTrack.artist_name}`;
+
+    return (
+      <>
+        <span className="font-semibold">{label}</span> {trackInfo}
+      </>
+    );
+  }, [currentTrack, isLoading, error]);
 
   return (
     <div className="flex items-center gap-2 px-4 whitespace-nowrap">
@@ -163,15 +177,16 @@ const MusicHistory = () => {
           className="hover:opacity-80 transition-opacity"
           style={{ color: color }}
         >
-          {getTrackDisplay()}
+          {trackDisplay}
         </a>
       ) : (
         <span style={{ color: color }}>
-          {getTrackDisplay()}
+          {trackDisplay}
         </span>
       )}
     </div>
   );
 };
 
-export default MusicHistory;
+// Wrap in memo to prevent unnecessary re-renders when parent updates
+export default memo(MusicHistory);

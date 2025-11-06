@@ -12,14 +12,13 @@ import Combine
 class MusicBackend: ObservableObject {
     @Published var authorizationStatus: MusicAuthorization.Status = .notDetermined
     @Published var currentTrack: Song?
-    @Published var isTracking = false
+    @Published var isTracking = true
     @Published var listeningQueue: [ListeningRecord] = []
     @Published var lastSyncTime: Date?
     @Published var errorMessage: String?
     @Published var lastCheckTime: Date?
 
     private var pollingTimer: Timer?
-    private var syncTimer: Timer?
     private var lastProcessedTrackID: String?
 
     // Backend API configuration
@@ -28,6 +27,11 @@ class MusicBackend: ObservableObject {
 
     init() {
         checkAuthorizationStatus()
+
+        // Auto-start tracking if already authorized
+        if authorizationStatus == .authorized {
+            startTracking()
+        }
     }
 
     // MARK: - Authorization
@@ -63,11 +67,9 @@ class MusicBackend: ObservableObject {
             }
         }
 
-        // Sync to backend every 5 minutes
-        syncTimer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { [weak self] _ in
-            Task {
-                await self?.syncListeningHistory()
-            }
+        // Allow timer to run in background
+        if let timer = pollingTimer {
+            RunLoop.current.add(timer, forMode: .common)
         }
 
         // Do initial check immediately
@@ -75,15 +77,13 @@ class MusicBackend: ObservableObject {
             await checkRecentlyPlayed()
         }
 
-        print("🎵 Music tracking started - polling every 30 seconds")
+        print("🎵 Music tracking started - polling every 30 seconds, syncing immediately")
     }
 
     func stopTracking() {
         isTracking = false
         pollingTimer?.invalidate()
         pollingTimer = nil
-        syncTimer?.invalidate()
-        syncTimer = nil
         print("🎵 Music tracking stopped")
     }
 
@@ -159,6 +159,9 @@ class MusicBackend: ObservableObject {
             listeningQueue.append(record)
             print("📝 Added to queue: \(record.trackName) (\(Int(duration))s)")
         }
+
+        // Sync immediately after adding to queue
+        await syncListeningHistory()
     }
 
     // MARK: - Backend Sync
