@@ -7,7 +7,6 @@
 
 import Foundation
 import MusicKit
-import Combine
 
 class MusicBackend: ObservableObject {
     @Published var authorizationStatus: MusicAuthorization.Status = .notDetermined
@@ -16,18 +15,17 @@ class MusicBackend: ObservableObject {
     @Published var listeningQueue: [ListeningRecord] = []
     @Published var lastSyncTime: Date?
     @Published var errorMessage: String?
+    @Published var lastCheckTime: Date?
 
-    private var musicPlayer = ApplicationMusicPlayer.shared
-    private var cancellables = Set<AnyCancellable>()
+    private var pollingTimer: Timer?
     private var syncTimer: Timer?
-    private var trackStartTime: Date?
+    private var lastProcessedTrackID: String?
 
     // Backend API configuration
     private let apiURL = "https://vmellodev-production.up.railway.app/api/listening-history"
 
     init() {
         checkAuthorizationStatus()
-        observePlayerState()
     }
 
     // MARK: - Authorization
@@ -56,80 +54,74 @@ class MusicBackend: ObservableObject {
 
         isTracking = true
 
-        // Start 5-minute sync timer
+        // Poll for recently played tracks every 30 seconds
+        pollingTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] _ in
+            Task {
+                await self?.checkRecentlyPlayed()
+            }
+        }
+
+        // Sync to backend every 5 minutes
         syncTimer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { [weak self] _ in
             Task {
                 await self?.syncListeningHistory()
             }
         }
 
-        print("🎵 Music tracking started")
+        // Do initial check immediately
+        Task {
+            await checkRecentlyPlayed()
+        }
+
+        print("🎵 Music tracking started - polling every 30 seconds")
     }
 
     func stopTracking() {
         isTracking = false
+        pollingTimer?.invalidate()
+        pollingTimer = nil
         syncTimer?.invalidate()
         syncTimer = nil
         print("🎵 Music tracking stopped")
     }
 
-    // MARK: - Player State Observation
+    // MARK: - Recently Played Tracking
 
-    private func observePlayerState() {
-        // Observe current entry changes
-        musicPlayer.queue.objectWillChange
-            .sink { [weak self] _ in
-                Task {
-                    await self?.handleTrackChange()
-                }
-            }
-            .store(in: &cancellables)
-
-        // Observe playback state
-        musicPlayer.state.objectWillChange
-            .sink { [weak self] _ in
-                Task {
-                    await self?.handlePlaybackStateChange()
-                }
-            }
-            .store(in: &cancellables)
-    }
-
-    private func handleTrackChange() async {
+    private func checkRecentlyPlayed() async {
         guard isTracking else { return }
 
-        // Save previous track if exists
-        if let previousSong = currentTrack, let startTime = trackStartTime {
-            let playDuration = Date().timeIntervalSince(startTime)
-            await createListeningRecord(song: previousSong, duration: playDuration)
-        }
+        do {
+            // Fetch recently played tracks
+            let request = MusicRecentlyPlayedRequest<Song>()
+            let response = try await request.response()
 
-        // Update to new track
-        if let entry = musicPlayer.queue.currentEntry,
-           case .song(let song) = entry.item {
             await MainActor.run {
-                currentTrack = song
-                trackStartTime = Date()
+                lastCheckTime = Date()
             }
-            print("🎵 Now playing: \(song.title) - \(song.artistName)")
-        }
-    }
 
-    private func handlePlaybackStateChange() async {
-        guard isTracking else { return }
+            // Get the most recent track
+            if let latestSong = response.items.first {
+                // Check if this is a new track (different from last processed)
+                let trackID = latestSong.id.rawValue
 
-        let state = musicPlayer.state.playbackStatus
+                if trackID != lastProcessedTrackID {
+                    print("🎵 New track detected: \(latestSong.title) - \(latestSong.artistName)")
 
-        if state == .stopped || state == .paused {
-            // Save current track listening time
-            if let song = currentTrack, let startTime = trackStartTime {
-                let playDuration = Date().timeIntervalSince(startTime)
-                await createListeningRecord(song: song, duration: playDuration)
+                    await MainActor.run {
+                        currentTrack = latestSong
+                        lastProcessedTrackID = trackID
+                    }
 
-                await MainActor.run {
-                    currentTrack = nil
-                    trackStartTime = nil
+                    // Create listening record
+                    // Note: We don't have exact play duration, so we'll estimate based on song length
+                    let estimatedDuration = latestSong.duration ?? 180.0 // Default 3 minutes
+                    await createListeningRecord(song: latestSong, duration: estimatedDuration)
                 }
+            }
+        } catch {
+            print("❌ Error fetching recently played: \(error.localizedDescription)")
+            await MainActor.run {
+                errorMessage = "Failed to fetch recent tracks: \(error.localizedDescription)"
             }
         }
     }
@@ -157,7 +149,7 @@ class MusicBackend: ObservableObject {
 
         await MainActor.run {
             listeningQueue.append(record)
-            print("📝 Added to queue: \(record.trackName) (\(Int(duration))s played)")
+            print("📝 Added to queue: \(record.trackName) (\(Int(duration))s)")
         }
     }
 
@@ -232,6 +224,12 @@ class MusicBackend: ObservableObject {
     func forceSyncNow() {
         Task {
             await syncListeningHistory()
+        }
+    }
+
+    func forceCheckNow() {
+        Task {
+            await checkRecentlyPlayed()
         }
     }
 }
