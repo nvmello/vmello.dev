@@ -23,13 +23,36 @@ function SmoothMarquee({ children, speed = 25 }) {
     const firstChild = container.firstElementChild;
     if (!firstChild) return;
 
+    // Force layout recalculation to ensure accurate measurements
+    const measureWidth = () => {
+      // Force a reflow to get accurate measurements
+      void firstChild.offsetHeight;
+      // Use scrollWidth for pixel-perfect measurements (no subpixel fractions)
+      return firstChild.scrollWidth;
+    };
+
     // Use ResizeObserver to handle dynamic content size changes
     const observer = new ResizeObserver(() => {
-      setItemWidth(firstChild.offsetWidth);
+      // Debounce rapid resize events
+      requestAnimationFrame(() => {
+        const width = measureWidth();
+        if (width > 0) {
+          setItemWidth(width);
+        }
+      });
     });
 
     observer.observe(firstChild);
-    setItemWidth(firstChild.offsetWidth);
+
+    // Measure after a double rAF to ensure layout is complete
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const initialWidth = measureWidth();
+        if (initialWidth > 0) {
+          setItemWidth(initialWidth);
+        }
+      });
+    });
 
     return () => observer.disconnect();
   }, [children]);
@@ -40,6 +63,9 @@ function SmoothMarquee({ children, speed = 25 }) {
 
     const container = containerRef.current;
     if (!container) return;
+
+    // Reset position when itemWidth changes to prevent issues
+    positionRef.current = 0;
 
     const pixelsPerFrame = speed / 10;
     let lastTime = performance.now();
@@ -52,13 +78,12 @@ function SmoothMarquee({ children, speed = 25 }) {
         // Increment position based on speed and time elapsed
         positionRef.current += (pixelsPerFrame * deltaTime) / 16.67; // Normalize to 60fps
 
-        // Use modulo to wrap position - this is the key to no visual jump
-        // When position reaches itemWidth, it wraps to 0
-        // But since we have identical copies, position 0 = position itemWidth visually
-        positionRef.current = positionRef.current % itemWidth;
+        // Apply modulo only to the transform, not to the position itself
+        // This prevents accumulating floating point errors while keeping smooth animation
+        const transformPosition = positionRef.current % itemWidth;
 
         // Apply transform - continuously moves left
-        container.style.transform = `translate3d(-${positionRef.current}px, 0, 0)`;
+        container.style.transform = `translate3d(-${transformPosition}px, 0, 0)`;
       }
 
       animationRef.current = requestAnimationFrame(animate);
