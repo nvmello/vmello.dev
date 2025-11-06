@@ -99,7 +99,8 @@ app.use((req, res, next) => {
   const origin = req.headers.origin;
 
   // Also allow Vercel preview deployments for your project
-  if (origin?.match(/^https:\/\/vmello-.*\.vercel\.app$/)) {
+  // Matches: vmello-*.vercel.app, vmello-dev-git-*.vercel.app, etc.
+  if (origin?.match(/^https:\/\/vmello-.*-nicks-projects-.*\.vercel\.app$/)) {
     allowedOrigins.push(origin);
   }
 
