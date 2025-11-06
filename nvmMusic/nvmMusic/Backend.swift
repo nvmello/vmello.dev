@@ -11,7 +11,7 @@ import Combine
 
 class MusicBackend: ObservableObject {
     @Published var authorizationStatus: MusicAuthorization.Status = .notDetermined
-    @Published var currentTrack: Track?
+    @Published var currentTrack: Song?
     @Published var isTracking = false
     @Published var listeningQueue: [ListeningRecord] = []
     @Published var lastSyncTime: Date?
@@ -99,19 +99,19 @@ class MusicBackend: ObservableObject {
         guard isTracking else { return }
 
         // Save previous track if exists
-        if let previousTrack = currentTrack, let startTime = trackStartTime {
+        if let previousSong = currentTrack, let startTime = trackStartTime {
             let playDuration = Date().timeIntervalSince(startTime)
-            await createListeningRecord(track: previousTrack, duration: playDuration)
+            await createListeningRecord(song: previousSong, duration: playDuration)
         }
 
         // Update to new track
         if let entry = musicPlayer.queue.currentEntry,
-           case .song(let track) = entry.item {
+           case .song(let song) = entry.item {
             await MainActor.run {
-                currentTrack = track
+                currentTrack = song
                 trackStartTime = Date()
             }
-            print("🎵 Now playing: \(track.title) - \(track.artistName)")
+            print("🎵 Now playing: \(song.title) - \(song.artistName)")
         }
     }
 
@@ -122,9 +122,9 @@ class MusicBackend: ObservableObject {
 
         if state == .stopped || state == .paused {
             // Save current track listening time
-            if let track = currentTrack, let startTime = trackStartTime {
+            if let song = currentTrack, let startTime = trackStartTime {
                 let playDuration = Date().timeIntervalSince(startTime)
-                await createListeningRecord(track: track, duration: playDuration)
+                await createListeningRecord(song: song, duration: playDuration)
 
                 await MainActor.run {
                     currentTrack = nil
@@ -136,22 +136,22 @@ class MusicBackend: ObservableObject {
 
     // MARK: - Listening Record Creation
 
-    private func createListeningRecord(track: Track, duration: TimeInterval) async {
+    private func createListeningRecord(song: Song, duration: TimeInterval) async {
         let record = ListeningRecord(
-            id: "\(ISO8601DateFormatter().string(from: Date()))-\(track.id.rawValue)",
+            id: "\(ISO8601DateFormatter().string(from: Date()))-\(song.id.rawValue)",
             timestamp: Date(),
-            trackName: track.title,
-            artistName: track.artistName,
-            albumName: track.albumTitle ?? "Unknown Album",
+            trackName: song.title,
+            artistName: song.artistName,
+            albumName: song.albumTitle ?? "Unknown Album",
             msPlayed: duration * 1000, // Convert to milliseconds
             platform: "ios",
             source: "apple_music",
-            appleMusicId: track.id.rawValue,
+            appleMusicId: song.id.rawValue,
             spotifyUri: nil,
             metadata: [
-                "genre": track.genreNames.first ?? "Unknown",
-                "duration_ms": String(Int((track.duration ?? 0) * 1000)),
-                "release_date": track.releaseDate?.description ?? "Unknown"
+                "genre": song.genreNames.first ?? "Unknown",
+                "duration_ms": String(Int((song.duration ?? 0) * 1000)),
+                "release_date": song.releaseDate?.description ?? "Unknown"
             ]
         )
 
