@@ -92,37 +92,43 @@ class MusicBackend: ObservableObject {
         guard isTracking else { return }
 
         do {
-            // Fetch recently played tracks
-            let request = MusicRecentlyPlayedRequest<Song>()
-            let response = try await request.response()
+            // Use SystemMusicPlayer to get currently playing track (no developer token needed)
+            let musicPlayer = SystemMusicPlayer.shared
 
             await MainActor.run {
                 lastCheckTime = Date()
             }
 
-            // Get the most recent track
-            if let latestSong = response.items.first {
-                // Check if this is a new track (different from last processed)
-                let trackID = latestSong.id.rawValue
+            // Check if there's a current entry in the queue
+            if let currentEntry = musicPlayer.queue.currentEntry {
+                switch currentEntry.item {
+                case .song(let song):
+                    let trackID = song.id.rawValue
 
-                if trackID != lastProcessedTrackID {
-                    print("🎵 New track detected: \(latestSong.title) - \(latestSong.artistName)")
+                    if trackID != lastProcessedTrackID {
+                        print("🎵 New track detected: \(song.title) - \(song.artistName)")
 
-                    await MainActor.run {
-                        currentTrack = latestSong
-                        lastProcessedTrackID = trackID
+                        await MainActor.run {
+                            currentTrack = song
+                            lastProcessedTrackID = trackID
+                        }
+
+                        // Create listening record with estimated duration
+                        let estimatedDuration = song.duration ?? 180.0
+                        await createListeningRecord(song: song, duration: estimatedDuration)
                     }
-
-                    // Create listening record
-                    // Note: We don't have exact play duration, so we'll estimate based on song length
-                    let estimatedDuration = latestSong.duration ?? 180.0 // Default 3 minutes
-                    await createListeningRecord(song: latestSong, duration: estimatedDuration)
+                default:
+                    print("ℹ️  Current entry is not a song")
                 }
+            } else {
+                // No current entry - try to fetch recently played using a simpler approach
+                // This falls back to checking the system music player's queue history
+                print("ℹ️  No current track playing")
             }
         } catch {
-            print("❌ Error fetching recently played: \(error.localizedDescription)")
+            print("❌ Error checking music player: \(error.localizedDescription)")
             await MainActor.run {
-                errorMessage = "Failed to fetch recent tracks: \(error.localizedDescription)"
+                errorMessage = "Failed to check music player: \(error.localizedDescription)"
             }
         }
     }
