@@ -20,10 +20,15 @@ const SPOTIFY_DATA_PATH = "/Users/nickvmorello/Documents/Spotify/Spotify Extende
 
 /**
  * Transform Spotify schema to our MongoDB schema
+ * Each listening event gets a unique ID combining timestamp and track URI
+ * This ensures all plays are recorded, even repeated listens to the same song
  */
 function transformSpotifyRecord(record) {
+  // Create unique ID for each listening event (timestamp + track URI)
+  const uniqueId = `${record.ts}-${record.spotify_track_uri || 'unknown'}`;
+
   return {
-    id: record.spotify_track_uri || `manual-${record.ts}-${Math.random()}`,
+    id: uniqueId,
     timestamp: new Date(record.ts),
     track_name: record.master_metadata_track_name,
     artist_name: record.master_metadata_album_artist_name,
