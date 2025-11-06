@@ -1,15 +1,19 @@
-# Embedded Systems Engineer - Raytheon Technologies
+# Embedded Software Engineer - Raytheon Technologies
 
 ## Description
+
 Developed embedded C++ applications for mission-critical systems, working with real-time operating systems and hardware interfaces. Contributed to software components requiring high reliability and performance in demanding environments, with extensive Python integration for firmware development.
 
 ## Status
+
 Previous Position
 
 ## Type
+
 experience
 
 ## Tech Stack
+
 - C++
 - Python
 - Embedded Systems
@@ -19,6 +23,7 @@ experience
 - Version Control Systems
 
 ## Features
+
 - Embedded software development for mission-critical applications
 - Real-time system programming
 - Hardware/software integration
@@ -27,7 +32,9 @@ experience
 - Compliance with aerospace software standards
 
 ## Company
+
 Raytheon Technologies
 
 ## Icon
+
 fa-solid-microchip
