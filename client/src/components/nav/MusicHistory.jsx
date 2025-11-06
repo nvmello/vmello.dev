@@ -25,8 +25,13 @@ const MusicHistory = () => {
   const color = colorScheme.accent.replace('text-[', '').replace(']', ''); // Extract hex color
 
   // API and WebSocket URLs
-  const API_URL = import.meta.env.VITE_MUSIC_API_URL || 'http://localhost:3000/api/listening-history';
-  const WS_URL = import.meta.env.VITE_MUSIC_WS_URL || 'ws://localhost:3000';
+  const API_URL = import.meta.env.MODE === 'production'
+    ? 'https://vmellodev-production.up.railway.app/api/listening-history'
+    : (import.meta.env.VITE_MUSIC_API_URL || 'http://localhost:3000/api/listening-history');
+
+  const WS_URL = import.meta.env.MODE === 'production'
+    ? 'wss://vmellodev-production.up.railway.app'
+    : (import.meta.env.VITE_MUSIC_WS_URL || 'ws://localhost:3000');
 
   // Fetch initial listening history
   useEffect(() => {
