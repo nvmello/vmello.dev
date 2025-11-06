@@ -80,10 +80,10 @@ If not, add it:
    - Play some tracks
    - Come back to nvmMusic to see them in the queue
 
-4. **Sync**
-   - App automatically syncs every 5 minutes
-   - Or tap "Sync Now" to force immediate sync
-   - Watch the queue count drop to 0 when sync completes
+4. **Automatic Sync**
+   - App automatically syncs immediately when a track is detected
+   - No manual intervention needed - tracks appear on website instantly
+   - Can also tap "Sync Now" to force sync of any queued items
 
 ### Monitoring
 
@@ -148,26 +148,27 @@ https://vmellodev-production.up.railway.app/api/listening-history
 
 - ✅ Real-time track detection
 - ✅ Play duration tracking (even partial plays)
-- ✅ 5-minute automatic sync
-- ✅ Offline queue with retry
-- ✅ Manual sync button
+- ✅ Instant automatic sync when track is detected
+- ✅ Background tracking support
+- ✅ Offline queue with retry on failure
+- ✅ Manual sync button for any queued items
 - ✅ Beautiful UI with status indicators
-- ✅ Background tracking
+- ✅ Works without opening the app (once tracking is started)
 
 ## 📊 Data Flow
 
 ```
-Apple Music → MusicKit Observer → Local Queue → Backend API → MongoDB → Website
+Apple Music → MusicKit Observer → Instant Sync → Backend API → MongoDB → Website
 ```
 
 1. You play music in Apple Music
-2. nvmMusic detects track changes via MusicKit
+2. nvmMusic detects track changes via MusicKit (every 30 seconds)
 3. Tracks duration and creates ListeningRecord
-4. Adds to local queue
-5. Every 5 minutes, syncs queue to backend
-6. Backend stores in MongoDB `personal_data.listening_history`
-7. Backend broadcasts via WebSocket
-8. Website updates in real-time
+4. Immediately syncs to backend (no waiting)
+5. Backend stores in MongoDB `personal_data.listening_history`
+6. Backend broadcasts via WebSocket
+7. Website updates in real-time
+8. Works in background - no need to keep app open
 
 ## 🎯 Success Indicators
 

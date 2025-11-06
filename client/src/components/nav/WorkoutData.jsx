@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, memo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useColorContext } from "../../context/ColorContext";
 import MyIcon from "../util/MyIcon";
@@ -336,4 +336,4 @@ function WorkoutData() {
   );
 }
 
-export default WorkoutData;
+export default memo(WorkoutData);

@@ -27,6 +27,12 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>
@@ -44,5 +50,11 @@
 	</array>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>nvmMusic needs access to Apple Music to track your listening history and sync it to your personal dashboard at vmello.dev</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>nvmMusic needs local network access to sync your listening history to your local server during development</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_http._tcp</string>
+	</array>
 </dict>
 </plist>
