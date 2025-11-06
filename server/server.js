@@ -69,7 +69,7 @@ console.log(
 const HOST = process.env.HOST || "localhost";
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
-const DB_NAME = "fitness_tracker";
+const DB_NAME = "personal_data";
 
 /**
  * MongoDB Connection
@@ -97,6 +97,12 @@ app.use((req, res, next) => {
     "http://localhost:5173",
   ];
   const origin = req.headers.origin;
+
+  // Also allow Vercel preview deployments for your project
+  // Matches: vmello-*.vercel.app, vmello-dev-git-*.vercel.app, etc.
+  if (origin?.match(/^https:\/\/vmello-.*-nicks-projects-.*\.vercel\.app$/)) {
+    allowedOrigins.push(origin);
+  }
 
   if (allowedOrigins.includes(origin)) {
     res.header("Access-Control-Allow-Origin", origin);
@@ -170,6 +176,30 @@ function broadcastNewWorkout(workout) {
       try {
         client.send(message);
         console.log("📢 Broadcasted new workout to client");
+      } catch (error) {
+        console.error("❌ Error broadcasting to client:", error);
+      }
+    }
+  });
+}
+
+/**
+ * Track Broadcasting
+ * ------------------
+ * Sends new listening history notifications to all connected WebSocket clients
+ * Called automatically after successful track creation
+ */
+function broadcastNewTrack(track) {
+  const message = JSON.stringify({
+    type: "new_track",
+    track: track,
+  });
+
+  clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      try {
+        client.send(message);
+        console.log("📢 Broadcasted new track to client");
       } catch (error) {
         console.error("❌ Error broadcasting to client:", error);
       }
@@ -296,9 +326,178 @@ async function getWorkoutsHandler(req, res) {
   }
 }
 
+/**
+ * Route Handler: Create Listening History Entry
+ * ------------------------------------------
+ * POST /api/listening-history
+ *
+ * Flow:
+ * 1. Validates track data
+ * 2. Checks for duplicates
+ * 3. Saves to MongoDB
+ * 4. Broadcasts to WebSocket clients
+ * 5. Returns confirmation to client
+ */
+async function createListeningHistoryHandler(req, res) {
+  const { id } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ error: "Track ID is required" });
+  }
+
+  try {
+    const listeningHistory = client.db(DB_NAME).collection("listening_history");
+
+    const existingTrack = await listeningHistory.findOne({ id });
+    if (existingTrack) {
+      console.log("⚠️ Duplicate track detected with id:", id);
+      return res.status(409).json({ error: "Duplicate track detected" });
+    }
+
+    const trackData = {
+      ...req.body,
+      timestamp: new Date(req.body.timestamp),
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+
+    const result = await listeningHistory.insertOne(trackData);
+    console.log("✅ Track saved with ID:", result.insertedId);
+
+    // Broadcast the new track to all connected clients
+    broadcastNewTrack(trackData);
+
+    res.status(201).json({
+      success: true,
+      id: result.insertedId,
+      message: "Listening history entry created successfully",
+    });
+  } catch (error) {
+    console.error("❌ Error creating listening history:", error);
+    res.status(500).json({
+      error: "Failed to create listening history entry",
+      message:
+        process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
+  }
+}
+
+/**
+ * Route Handler: Get Listening History
+ * ----------------------------------
+ * GET /api/listening-history
+ *
+ * Flow:
+ * 1. Queries MongoDB for tracks
+ * 2. Sorts by timestamp (descending)
+ * 3. Limits to 50 most recent tracks
+ * 4. Returns track list to client
+ */
+async function getListeningHistoryHandler(req, res) {
+  try {
+    const listeningHistory = client.db(DB_NAME).collection("listening_history");
+    const results = await listeningHistory
+      .find()
+      .sort({ timestamp: -1 })
+      .limit(50)
+      .toArray();
+
+    if (!results.length) {
+      return res.status(404).json({ message: "No listening history found" });
+    }
+
+    res.json(results);
+  } catch (error) {
+    console.error("❌ Error fetching listening history:", error);
+    res.status(500).json({
+      error: "Failed to fetch listening history",
+      message:
+        process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
+  }
+}
+
+/**
+ * Route Handler: Get Listening Statistics
+ * -------------------------------------
+ * GET /api/listening-history/stats
+ *
+ * Returns aggregated statistics:
+ * - Trending track (most played in last 7 days)
+ * - Top artist (most listened artist)
+ * - Total plays today
+ */
+async function getListeningStatsHandler(req, res) {
+  try {
+    const listeningHistory = client.db(DB_NAME).collection("listening_history");
+
+    // Get date 7 days ago for trending calculation
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    // Get start of today for today's count
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    // Trending track (most played in last 7 days)
+    const trendingTrack = await listeningHistory
+      .aggregate([
+        { $match: { timestamp: { $gte: sevenDaysAgo } } },
+        {
+          $group: {
+            _id: {
+              track: "$track_name",
+              artist: "$artist_name",
+              spotify_uri: "$spotify_uri",
+            },
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { count: -1 } },
+        { $limit: 1 },
+      ])
+      .toArray();
+
+    // Top artist (all time)
+    const topArtist = await listeningHistory
+      .aggregate([
+        {
+          $group: {
+            _id: "$artist_name",
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { count: -1 } },
+        { $limit: 1 },
+      ])
+      .toArray();
+
+    // Total plays today
+    const playsToday = await listeningHistory.countDocuments({
+      timestamp: { $gte: todayStart },
+    });
+
+    res.json({
+      trending_track: trendingTrack[0] || null,
+      top_artist: topArtist[0] || null,
+      plays_today: playsToday,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching listening statistics:", error);
+    res.status(500).json({
+      error: "Failed to fetch listening statistics",
+      message:
+        process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
+  }
+}
+
 // Route definitions
 app.post("/api/workouts", createWorkoutHandler);
 app.get("/api/workouts", getWorkoutsHandler);
+app.post("/api/listening-history", createListeningHistoryHandler);
+app.get("/api/listening-history", getListeningHistoryHandler);
+app.get("/api/listening-history/stats", getListeningStatsHandler);
 
 /**
  * Graceful Shutdown Handler
