@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  nvmMusic
 //
-//  Created by Nick Morello on 11/6/25.
+//  Main UI for music tracking app
 //
 
 import SwiftUI
@@ -255,6 +255,8 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }

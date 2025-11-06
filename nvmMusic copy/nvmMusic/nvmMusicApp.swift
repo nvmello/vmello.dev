@@ -2,7 +2,7 @@
 //  nvmMusicApp.swift
 //  nvmMusic
 //
-//  Created by Nick Morello on 11/6/25.
+//  App entry point
 //
 
 import SwiftUI
