@@ -17,6 +17,7 @@ struct ListeningRecord: Codable {
     let platform: String
     let source: String
     let appleMusicId: String?
+    let appleMusicArtistId: String?
     let spotifyUri: String?
     let metadata: [String: String]
 
@@ -38,6 +39,7 @@ struct ListeningRecord: Codable {
         case platform
         case source
         case appleMusicId = "apple_music_id"
+        case appleMusicArtistId = "apple_music_artist_id"
         case spotifyUri = "spotify_uri"
         case metadata
         case albumArtworkUrl = "album_artwork_url"
