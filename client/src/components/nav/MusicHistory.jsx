@@ -124,18 +124,20 @@ const MusicHistory = () => {
     >
       <FontAwesomeIcon
         icon={faHeadphones}
-        className="text-xl transition-opacity duration-300"
+        className="text-xl transition-opacity duration-300 delay-150"
         style={{
           color: color,
-          opacity: isHovered ? 0 : 1
+          opacity: isHovered ? 0 : 1,
+          transitionDelay: isHovered ? '0ms' : '150ms'
         }}
       />
 
       {/* Artist name - fades out when hovered */}
       <span
-        className="transition-opacity duration-300"
+        className="transition-opacity duration-300 delay-150"
         style={{
-          opacity: isHovered ? 0 : 1
+          opacity: isHovered ? 0 : 1,
+          transitionDelay: isHovered ? '0ms' : '150ms'
         }}
       >
         {artistDisplay}
@@ -143,9 +145,10 @@ const MusicHistory = () => {
 
       {/* Music platform icons - fade in when hovered, positioned absolutely */}
       <div
-        className="absolute inset-0 flex items-center justify-center gap-4 transition-opacity duration-300 pointer-events-none"
+        className="absolute inset-0 flex items-center justify-center gap-4 transition-opacity duration-200 pointer-events-none"
         style={{
           opacity: isHovered ? 1 : 0,
+          transitionDelay: isHovered ? '150ms' : '0ms'
         }}
       >
         <a

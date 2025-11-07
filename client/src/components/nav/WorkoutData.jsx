@@ -305,6 +305,7 @@ function WorkoutData() {
       `}
         style={{
           opacity: isHovered ? 0 : 1,
+          transitionDelay: isHovered ? '0ms' : '150ms'
         }}
       >
         <FontAwesomeIcon
@@ -350,9 +351,10 @@ function WorkoutData() {
 
       {/* Strava icon - fades in when hovered, positioned absolutely */}
       <div
-        className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 pointer-events-none"
+        className="absolute inset-0 flex items-center justify-center transition-opacity duration-200 pointer-events-none"
         style={{
           opacity: isHovered ? 1 : 0,
+          transitionDelay: isHovered ? '150ms' : '0ms'
         }}
       >
         <a
