@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useColorContext } from "../../context/ColorContext";
 import MyIcon from "../util/MyIcon";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { loadAllProjects } from "../../utils/projectParser";
 
 export const ProjectsShowcase = () => {
@@ -48,6 +50,7 @@ export const ProjectsShowcase = () => {
 
 const ProjectCard = ({ project, index }) => {
   const { colorScheme } = useColorContext();
+  const accentColor = colorScheme.accent.replace("text-[", "").replace("]", "");
 
   return (
     <motion.div
@@ -149,13 +152,10 @@ const ProjectCard = ({ project, index }) => {
             <ul className={`text-sm ${colorScheme.text} space-y-1`}>
               {project.featureList.map((feature, i) => (
                 <li key={i} className="flex items-center">
-                  <MyIcon
-                    icon="fa-solid fa-check"
-                    size={`text-xs mr-2 ${
-                      colorScheme.bg === "bg-[#000000]"
-                        ? "text-[#00ff00]"
-                        : "text-green-600"
-                    }`}
+                  <FontAwesomeIcon
+                    icon={faCheck}
+                    className="text-xs mr-2"
+                    style={{ color: accentColor }}
                   />
                   {feature}
                 </li>
