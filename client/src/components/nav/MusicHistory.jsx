@@ -23,6 +23,7 @@ const MusicHistory = () => {
   const [isHovered, setIsHovered] = useState(false);
   const { colorScheme } = useColorContext();
   const color = colorScheme.accent.replace('text-[', '').replace(']', ''); // Extract hex color
+  const titleColor = colorScheme.title.replace('text-[', '').replace(']', ''); // Extract title color
 
   // API URL
   const API_URL = import.meta.env.MODE === 'production'
@@ -69,16 +70,17 @@ const MusicHistory = () => {
 
   // Memoize artist display to prevent recalculation
   const artistDisplay = useMemo(() => {
-    if (isLoading) return 'Loading...';
-    if (error) return error;
-    if (!topArtist) return 'No listening data';
+    if (isLoading) return <span style={{ color: titleColor }}>Loading...</span>;
+    if (error) return <span style={{ color: titleColor }}>{error}</span>;
+    if (!topArtist) return <span style={{ color: titleColor }}>No listening data</span>;
 
     return (
       <>
-        <span className="font-semibold">On Repeat:</span> {topArtist.artist_name}
+        <span className="font-semibold" style={{ color: titleColor }}>On Repeat:</span>{' '}
+        <span style={{ color: color }}>{topArtist.artist_name}</span>
       </>
     );
-  }, [topArtist, isLoading, error]);
+  }, [topArtist, isLoading, error, color, titleColor]);
 
   // Generate platform URLs
   // For Spotify: Use direct artist link if we have URI, otherwise search
@@ -133,7 +135,6 @@ const MusicHistory = () => {
       <span
         className="transition-opacity duration-300"
         style={{
-          color: color,
           opacity: isHovered ? 0 : 1
         }}
       >
