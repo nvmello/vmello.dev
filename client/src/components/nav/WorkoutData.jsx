@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useColorContext } from "../../context/ColorContext";
 import MyIcon from "../util/MyIcon";
 import iconMap from "../util/IconMap";
+import { faDumbbell } from "@fortawesome/free-solid-svg-icons";
+import { faStrava } from "@fortawesome/free-brands-svg-icons";
 /**
  * WorkoutData Component
  *
@@ -25,8 +27,12 @@ function WorkoutData() {
   const [isLoading, setIsLoading] = useState(true);
   // Persist WebSocket connection across re-renders using useRef
   const wsRef = useRef(null);
+  // Track hover state for icon color animation
+  const [isHovered, setIsHovered] = useState(false);
 
   const { colorScheme } = useColorContext();
+  const color = colorScheme.accent.replace("text-[", "").replace("]", ""); // Extract hex color
+  const titleColor = colorScheme.title.replace("text-[", "").replace("]", ""); // Extract title color
 
   /**
    * Fetches the most recent workout data from the REST API.
@@ -62,9 +68,10 @@ function WorkoutData() {
   const fetchTodaysWorkouts = async () => {
     try {
       // Use Railway production API or local development API
-      const apiUrl = import.meta.env.MODE === 'production'
-        ? 'https://vmellodev-production.up.railway.app/api/workouts' 
-        : import.meta.env.VITE_API_URL;
+      const apiUrl =
+        import.meta.env.MODE === "production"
+          ? "https://vmellodev-production.up.railway.app/api/workouts"
+          : import.meta.env.VITE_API_URL;
 
       if (!apiUrl) {
         console.warn("API URL not configured");
@@ -226,15 +233,19 @@ function WorkoutData() {
           }
         `}
         >
-          <MyIcon
-            icon="fa-solid fa-exclamation-triangle"
-            size={`text-xs ${
-              colorScheme.bg === "bg-[#000000]" ? "text-red-400" : "text-red-600"
-            }`}
+          <FontAwesomeIcon
+            icon={faDumbbell}
+            className="text-xl transition-opacity duration-300"
+            style={{
+              color: color,
+              opacity: isHovered ? 0 : 1,
+            }}
           />
           <span
             className={`${
-              colorScheme.bg === "bg-[#000000]" ? "text-red-400" : "text-red-600"
+              colorScheme.bg === "bg-[#000000]"
+                ? "text-red-400"
+                : "text-red-600"
             } font-medium text-xs`}
           >
             API Error
@@ -278,59 +289,86 @@ function WorkoutData() {
 
   // Render workout information
   return (
-    <div className="flex items-center space-x-2 text-sm whitespace-nowrap">
+    <div
+      className="relative flex items-center space-x-2 text-sm whitespace-nowrap cursor-pointer"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div
         className={`
-        flex items-center space-x-2 px-3 py-1 rounded-full
+        flex items-center space-x-2 px-3 py-1 rounded-full transition-opacity duration-300
         ${
           colorScheme.bg === "bg-[#000000]"
             ? "bg-[#030303] border border-[#111111]"
             : "bg-gray-100/80 border border-gray-200"
         }
       `}
+        style={{
+          opacity: isHovered ? 0 : 1,
+        }}
       >
-        <MyIcon
-          icon="fa-solid fa-dumbbell"
-          size={`text-xs ${
-            colorScheme.bg === "bg-[#000000]" ? "text-[#00ff00]" : "text-green-600"
-          }`}
+        <FontAwesomeIcon
+          icon={faDumbbell}
+          className="text-xs"
+          style={{
+            color: color,
+          }}
         />
-        <span className={`${colorScheme.text} font-medium`}>
-          Today's Gains:
+        <span
+          className="font-medium"
+          style={{
+            color: titleColor,
+          }}
+        >
+          Today&apos;s Gains:
         </span>
         {workouts.length > 0 ? (
           <div className="flex items-center space-x-1">
             {workouts.map((workout, index) => (
               <span key={workout.id} className="flex items-center">
-                <span
-                  className={
-                    colorScheme.bg === "bg-[#000000]"
-                      ? "text-[#00ff00]"
-                      : "text-green-700"
-                  }
-                >
-                  {iconMap[workout.type]}
-                </span>
+                <span style={{ color: color }}>{iconMap[workout.type]}</span>
                 {index < workouts.length - 1 && (
-                  <span className={`mx-1 ${colorScheme.text}`}>+</span>
+                  <span className="mx-1" style={{ color: color }}>
+                    +
+                  </span>
                 )}
               </span>
             ))}
-            <span className={`ml-2 text-xs ${colorScheme.text} opacity-75`}>
+            <span
+              className="ml-2 text-xs"
+              style={{ color: color, opacity: 0.75 }}
+            >
               ({workouts.length} workout{workouts.length > 1 ? "s" : ""})
             </span>
           </div>
         ) : (
-          <span
-            className={
-              colorScheme.bg === "bg-[#000000]"
-                ? "text-orange-400"
-                : "text-orange-600"
-            }
-          >
-            <MyIcon icon="fa-duotone fa-solid fa-potato" />
+          <span style={{ color: color }}>
+            <MyIcon icon="fa-duotone fa-thin fa-potato" />
           </span>
         )}
+      </div>
+
+      {/* Strava icon - fades in when hovered, positioned absolutely */}
+      <div
+        className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 pointer-events-none"
+        style={{
+          opacity: isHovered ? 1 : 0,
+        }}
+      >
+        <a
+          href="https://strava.app.link/W4daBrWP5Xb"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:scale-110 transition-transform duration-200"
+          style={{ pointerEvents: isHovered ? 'auto' : 'none' }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <FontAwesomeIcon
+            icon={faStrava}
+            className="text-3xl"
+            style={{ color: '#FC4C02' }}
+          />
+        </a>
       </div>
     </div>
   );
