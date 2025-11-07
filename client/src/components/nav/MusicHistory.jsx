@@ -1,8 +1,8 @@
-import { useEffect, useState, useMemo, memo } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
-import { faSpotify, faApple } from '@fortawesome/free-brands-svg-icons';
-import { useColorContext } from '../../context/ColorContext';
+import { useEffect, useState, useMemo, memo } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeadphones } from "@fortawesome/free-solid-svg-icons";
+import { faSpotify, faApple } from "@fortawesome/free-brands-svg-icons";
+import { useColorContext } from "../../context/ColorContext";
 
 /**
  * MusicHistory Component
@@ -13,8 +13,50 @@ import { useColorContext } from '../../context/ColorContext';
  * - Fetches top artist on mount via REST API
  * - Shows "On Repeat:" with the most listened to artist
  * - Refreshes hourly
- * - Shows Spotify/Apple Music icons that fade in on hover
+ * - Shows Spotify/Apple Music icons with smooth tap-to-reveal animations
+ * - Links only accessible when logos are visible (matches WorkoutData pattern)
  */
+
+// Define animations at module level (matching WorkoutData pattern)
+const animationStyles = `
+  @keyframes fadeOutUp {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  [data-music-history] .music-content {
+    animation: fadeOutUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  [data-music-history] .music-content.show {
+    animation: fadeInDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  [data-music-history] .music-logos {
+    animation: fadeOutUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  [data-music-history] .music-logos.show {
+    animation: fadeInDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+`;
 
 const MusicHistory = () => {
   const [topArtist, setTopArtist] = useState(null);
@@ -23,13 +65,15 @@ const MusicHistory = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { colorScheme } = useColorContext();
-  const color = colorScheme.accent.replace('text-[', '').replace(']', ''); // Extract hex color
-  const titleColor = colorScheme.title.replace('text-[', '').replace(']', ''); // Extract title color
+  const color = colorScheme.accent.replace("text-[", "").replace("]", "");
+  const titleColor = colorScheme.title.replace("text-[", "").replace("]", "");
 
   // API URL
-  const API_URL = import.meta.env.MODE === 'production'
-    ? 'https://vmellodev-production.up.railway.app/api/listening-history/top-artist'
-    : (import.meta.env.VITE_MUSIC_API_URL || 'http://localhost:3000/api/listening-history/top-artist');
+  const API_URL =
+    import.meta.env.MODE === "production"
+      ? "https://vmellodev-production.up.railway.app/api/listening-history/top-artist"
+      : import.meta.env.VITE_MUSIC_API_URL ||
+        "http://localhost:3000/api/listening-history/top-artist";
 
   // Fetch top artist
   useEffect(() => {
@@ -55,8 +99,8 @@ const MusicHistory = () => {
 
         setError(null);
       } catch (err) {
-        console.error('Error fetching top artist:', err);
-        setError('Failed to load top artist');
+        console.error("Error fetching top artist:", err);
+        setError("Failed to load top artist");
       } finally {
         setIsLoading(false);
       }
@@ -73,163 +117,155 @@ const MusicHistory = () => {
   const artistDisplay = useMemo(() => {
     if (isLoading) return <span style={{ color: titleColor }}>Loading...</span>;
     if (error) return <span style={{ color: titleColor }}>{error}</span>;
-    if (!topArtist) return <span style={{ color: titleColor }}>No listening data</span>;
+    if (!topArtist)
+      return <span style={{ color: titleColor }}>No listening data</span>;
 
     return (
       <>
-        <span className="font-semibold" style={{ color: titleColor }}>On Repeat:</span>{' '}
+        <span className="font-semibold" style={{ color: titleColor }}>
+          On Repeat:
+        </span>{" "}
         <span style={{ color: color }}>{topArtist.artist_name}</span>
       </>
     );
   }, [topArtist, isLoading, error, color, titleColor]);
 
   // Generate platform URLs
-  // For Spotify: Use direct artist link if we have URI, otherwise search
   const spotifyUrl = useMemo(() => {
     if (!topArtist) return null;
 
     if (topArtist.spotify_uri) {
-      // Extract artist ID from Spotify URI (format: spotify:artist:ID or spotify:track:ID)
-      const uriParts = topArtist.spotify_uri.split(':');
-      if (uriParts[1] === 'artist') {
+      const uriParts = topArtist.spotify_uri.split(":");
+      if (uriParts[1] === "artist") {
         return `https://open.spotify.com/artist/${uriParts[2]}`;
       }
-      // If it's a track URI, link to the track (user can navigate to artist from there)
-      if (uriParts[1] === 'track') {
+      if (uriParts[1] === "track") {
         return `https://open.spotify.com/track/${uriParts[2]}`;
       }
     }
 
-    // Fallback to search
-    return `https://open.spotify.com/search/${encodeURIComponent(topArtist.artist_name)}`;
+    return `https://open.spotify.com/search/${encodeURIComponent(
+      topArtist.artist_name
+    )}`;
   }, [topArtist]);
 
-  // For Apple Music: Use direct artist link if we have ID, otherwise search
   const appleMusicUrl = useMemo(() => {
     if (!topArtist) return null;
 
     if (topArtist.apple_music_artist_id) {
-      // Direct link to artist page
       return `https://music.apple.com/us/artist/${topArtist.apple_music_artist_id}`;
     }
 
-    // Fallback to search
-    return `https://music.apple.com/us/search?term=${encodeURIComponent(topArtist.artist_name)}`;
+    return `https://music.apple.com/us/search?term=${encodeURIComponent(
+      topArtist.artist_name
+    )}`;
   }, [topArtist]);
 
-  // Handle click for mobile - toggle logo visibility
+  // Determine if logos should be visible (matches WorkoutData pattern)
+  const showLogos = isHovered || isMobileOpen;
+
+  // Handle click for mobile - toggle logo visibility (matches WorkoutData pattern exactly)
   const handleClick = (e) => {
-    // Only handle if not loading and no error
     if (isLoading || error) return;
 
-    // Don't handle if hovering (desktop behavior)
-    if (isHovered) return;
-
-    // Prevent default behavior and stop propagation
-    e.preventDefault();
-    e.stopPropagation();
-
-    // If logos are not showing, show them (first tap)
-    if (!isMobileOpen) {
+    // Check if clicking on a logo link
+    const linkElement = e.target.closest("a");
+    if (linkElement) {
+      // If logos are showing, allow navigation
+      if (showLogos) {
+        setIsMobileOpen(false);
+        return;
+      }
+      // Otherwise show logos and prevent navigation
+      e.preventDefault();
+      e.stopPropagation();
       setIsMobileOpen(true);
       return;
     }
 
-    // If logos are showing and user clicked a link, allow navigation
-    const linkElement = e.target.closest('a');
-    if (linkElement && isMobileOpen) {
-      // Close the menu and navigate
-      setIsMobileOpen(false);
-      // Use setTimeout to ensure state updates before navigation
-      setTimeout(() => {
-        window.open(linkElement.href, '_blank', 'noopener,noreferrer');
-      }, 0);
-      return;
-    }
-
-    // If logos are showing and user clicked container (not a link), close them
-    if (isMobileOpen) {
-      setIsMobileOpen(false);
-    }
+    e.stopPropagation();
+    setIsMobileOpen(!isMobileOpen);
   };
 
-  // Close mobile menu when clicking outside or scrolling
+  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (isMobileOpen && !e.target.closest('[data-music-history]')) {
+      if (isMobileOpen && !e.target.closest("[data-music-history]")) {
         setIsMobileOpen(false);
       }
     };
 
-    const handleScroll = () => {
-      if (isMobileOpen) {
-        setIsMobileOpen(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside, true);
-    window.addEventListener('scroll', handleScroll, true);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside, true);
-      window.removeEventListener('scroll', handleScroll, true);
-    };
+    document.addEventListener("click", handleClickOutside, true);
+    return () =>
+      document.removeEventListener("click", handleClickOutside, true);
   }, [isMobileOpen]);
 
-  // Determine if logos should be visible (hover for desktop, isMobileOpen for mobile)
-  const showLogos = isHovered || isMobileOpen;
+  // Reset mobile open state when navigating back to page
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        setIsMobileOpen(false);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
+
+  // Inject styles once (matches WorkoutData pattern)
+  useEffect(() => {
+    if (!document.getElementById("music-history-styles")) {
+      const styleEl = document.createElement("style");
+      styleEl.id = "music-history-styles";
+      styleEl.textContent = animationStyles;
+      document.head.appendChild(styleEl);
+    }
+  }, []);
 
   return (
     <div
       data-music-history
-      className="relative flex items-center gap-2 px-4 whitespace-nowrap cursor-pointer transition-all duration-300"
+      className="relative flex items-center gap-2 px-4 whitespace-nowrap cursor-pointer"
       onMouseEnter={() => !isLoading && !error && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleClick}
     >
-      <FontAwesomeIcon
-        icon={faHeadphones}
-        className="text-xl transition-opacity duration-300 delay-150"
-        style={{
-          color: color,
-          opacity: showLogos ? 0 : 1,
-          transitionDelay: showLogos ? '0ms' : '150ms'
-        }}
-      />
-
-      {/* Artist name - fades out when hovered */}
-      <span
-        className="transition-opacity duration-300 delay-150"
-        style={{
-          opacity: showLogos ? 0 : 1,
-          transitionDelay: showLogos ? '0ms' : '150ms'
-        }}
-      >
-        {artistDisplay}
-      </span>
-
-      {/* Music platform icons - fade in when hovered, positioned absolutely */}
+      {/* Artist content with animation - visible by default (no "show" class) */}
       <div
-        className="absolute inset-0 flex items-center justify-center gap-4 transition-opacity duration-200 pointer-events-none"
+        className={`music-content flex items-center gap-2 min-w-0 ${
+          showLogos ? "" : "show"
+        }`}
+      >
+        <FontAwesomeIcon
+          icon={faHeadphones}
+          className="text-xl flex-shrink-0"
+          style={{ color }}
+        />
+
+        <span className="transition-colors duration-300">{artistDisplay}</span>
+      </div>
+
+      {/* Music platform icons - fade in when hovered/tapped */}
+      <div
+        className={`music-logos absolute inset-0 flex items-center justify-center gap-6 ${
+          showLogos ? "show" : ""
+        }`}
         style={{
-          opacity: showLogos ? 1 : 0,
-          transitionDelay: showLogos ? '150ms' : '0ms'
+          pointerEvents: showLogos ? "auto" : "none",
         }}
       >
         <a
           href={spotifyUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:scale-110 transition-transform duration-200"
-          style={{
-            pointerEvents: showLogos ? 'auto' : 'none',
-            cursor: showLogos ? 'pointer' : 'default'
-          }}
+          className="transform transition-transform duration-200 hover:scale-110 active:scale-95"
+          aria-label="Open on Spotify"
         >
           <FontAwesomeIcon
             icon={faSpotify}
             className="text-3xl"
-            style={{ color: '#1DB954' }}
+            style={{ color: "#1DB954" }}
           />
         </a>
 
@@ -237,16 +273,15 @@ const MusicHistory = () => {
           href={appleMusicUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:scale-110 transition-transform duration-200"
-          style={{
-            pointerEvents: showLogos ? 'auto' : 'none',
-            cursor: showLogos ? 'pointer' : 'default'
-          }}
+          className="transform transition-transform duration-200 hover:scale-110 active:scale-95"
+          aria-label="Open on Apple Music"
         >
           <FontAwesomeIcon
             icon={faApple}
             className="text-3xl"
-            style={{ color: colorScheme.bg === 'bg-[#000000]' ? '#ffffff' : '#000000' }}
+            style={{
+              color: colorScheme.bg === "bg-[#000000]" ? "#ffffff" : "#000000",
+            }}
           />
         </a>
       </div>
@@ -254,5 +289,4 @@ const MusicHistory = () => {
   );
 };
 
-// Wrap in memo to prevent unnecessary re-renders when parent updates
 export default memo(MusicHistory);

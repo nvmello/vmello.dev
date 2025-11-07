@@ -104,6 +104,12 @@ app.use((req, res, next) => {
     allowedOrigins.push(origin);
   }
 
+  // Allow local network connections for mobile testing
+  // Matches: http://192.168.x.x:5173, http://10.x.x.x:5173, etc.
+  if (origin?.match(/^http:\/\/(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[01])\.)\d+\.\d+:5173$/)) {
+    allowedOrigins.push(origin);
+  }
+
   if (allowedOrigins.includes(origin)) {
     res.header("Access-Control-Allow-Origin", origin);
   }
@@ -607,8 +613,11 @@ process.on("SIGTERM", async () => {
 async function startServer() {
   try {
     await connectToDatabase();
-    httpServer.listen(PORT, () => {
-      console.log(`🚀 Server running on http://${HOST}:${PORT}`);
+    // Bind to 0.0.0.0 to accept connections from all network interfaces
+    // This allows mobile devices on the same network to connect
+    httpServer.listen(PORT, '0.0.0.0', () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`📱 Network access: http://192.168.0.118:${PORT}`);
       console.log(`🔌 WebSocket server is running`);
       console.log(`📅 Server started at: ${new Date().toISOString()}`);
     });

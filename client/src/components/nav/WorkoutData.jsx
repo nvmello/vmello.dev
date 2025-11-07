@@ -5,19 +5,60 @@ import MyIcon from "../util/MyIcon";
 import iconMap from "../util/IconMap";
 import { faDumbbell } from "@fortawesome/free-solid-svg-icons";
 import { faStrava } from "@fortawesome/free-brands-svg-icons";
+
 /**
  * WorkoutData Component
+ * ----------------------
+ * Displays today's workout information with real-time updates via WebSocket
  *
- * This component displays the latest workout information and maintains a real-time
- * connection to receive workout updates. It combines REST API fetching for initial
- * data with WebSocket connectivity for live updates.
- *
- * State Management:
- * - workout: Stores the current workout data
- * - error: Tracks any error states
- * - isLoading: Indicates data fetching status
- * - wsRef: Maintains WebSocket connection reference
+ * Features:
+ * - Fetches workout data on mount via REST API
+ * - Shows "Today's Gains:" with workout type icons
+ * - WebSocket connection for real-time updates
+ * - Shows Strava icon with smooth crossfade animations
+ * - Link only accessible when logo is visible
  */
+
+// Define animations at module level to avoid recreation
+const animationStyles = `
+  @keyframes fadeOutUp {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  [data-workout-data] .workout-content {
+    animation: fadeOutUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  [data-workout-data] .workout-content.show {
+    animation: fadeInDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  [data-workout-data] .workout-logos {
+    animation: fadeOutUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  [data-workout-data] .workout-logos.show {
+    animation: fadeInDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+`;
 function WorkoutData() {
   // Store the latest workout data
   const [workouts, setWorkouts] = useState([]);
@@ -223,59 +264,60 @@ function WorkoutData() {
 
   // Handle click for mobile - toggle logo visibility
   const handleClick = (e) => {
-    // Don't handle if hovering (desktop behavior)
-    if (isHovered) return;
-
-    // Prevent default behavior and stop propagation
-    e.preventDefault();
-    e.stopPropagation();
-
-    // If logos are not showing, show them (first tap)
-    if (!isMobileOpen) {
+    // Check if clicking on a logo link
+    const linkElement = e.target.closest("a");
+    if (linkElement) {
+      // If logos are showing, allow navigation
+      if (showLogos) {
+        setIsMobileOpen(false);
+        return;
+      }
+      // Otherwise show logos and prevent navigation
+      e.preventDefault();
+      e.stopPropagation();
       setIsMobileOpen(true);
       return;
     }
 
-    // If logos are showing and user clicked a link, allow navigation
-    const linkElement = e.target.closest('a');
-    if (linkElement && isMobileOpen) {
-      // Close the menu and navigate
-      setIsMobileOpen(false);
-      // Use setTimeout to ensure state updates before navigation
-      setTimeout(() => {
-        window.open(linkElement.href, '_blank', 'noopener,noreferrer');
-      }, 0);
-      return;
-    }
-
-    // If logos are showing and user clicked container (not a link), close them
-    if (isMobileOpen) {
-      setIsMobileOpen(false);
-    }
+    e.stopPropagation();
+    setIsMobileOpen(!isMobileOpen);
   };
 
-  // Close mobile menu when clicking outside or scrolling
+  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (isMobileOpen && !e.target.closest('[data-workout-data]')) {
+      if (isMobileOpen && !e.target.closest("[data-workout-data]")) {
         setIsMobileOpen(false);
       }
     };
 
-    const handleScroll = () => {
-      if (isMobileOpen) {
-        setIsMobileOpen(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside, true);
-    window.addEventListener('scroll', handleScroll, true);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside, true);
-      window.removeEventListener('scroll', handleScroll, true);
-    };
+    document.addEventListener("click", handleClickOutside, true);
+    return () =>
+      document.removeEventListener("click", handleClickOutside, true);
   }, [isMobileOpen]);
+
+  // Reset mobile open state when navigating back to page
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        setIsMobileOpen(false);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
+
+  // Inject styles once
+  useEffect(() => {
+    if (!document.getElementById("workout-data-styles")) {
+      const styleEl = document.createElement("style");
+      styleEl.id = "workout-data-styles";
+      styleEl.textContent = animationStyles;
+      document.head.appendChild(styleEl);
+    }
+  }, []);
 
   // Determine if logos should be visible (hover for desktop, isMobileOpen for mobile)
   const showLogos = isHovered || isMobileOpen;
@@ -357,83 +399,78 @@ function WorkoutData() {
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleClick}
     >
-      <div
-        className={`
-        flex items-center space-x-2 px-3 py-1 rounded-full transition-opacity duration-300
-        ${
-          colorScheme.bg === "bg-[#000000]"
-            ? "bg-[#030303] border border-[#111111]"
-            : "bg-gray-100/80 border border-gray-200"
-        }
-      `}
-        style={{
-          opacity: showLogos ? 0 : 1,
-          transitionDelay: showLogos ? '0ms' : '150ms'
-        }}
-      >
-        <FontAwesomeIcon
-          icon={faDumbbell}
-          className="text-xs"
-          style={{
-            color: color,
-          }}
-        />
-        <span
-          className="font-medium"
-          style={{
-            color: titleColor,
-          }}
+      {/* Workout content with animation */}
+      <div className={`workout-content ${showLogos ? "" : "show"}`}>
+        <div
+          className={`
+          flex items-center space-x-2 px-3 py-1 rounded-full
+          ${
+            colorScheme.bg === "bg-[#000000]"
+              ? "bg-[#030303] border border-[#111111]"
+              : "bg-gray-100/80 border border-gray-200"
+          }
+        `}
         >
-          Today&apos;s Gains:
-        </span>
-        {workouts.length > 0 ? (
-          <div className="flex items-center space-x-1">
-            {workouts.map((workout, index) => (
-              <span key={workout.id} className="flex items-center">
-                <span style={{ color: color }}>{iconMap[workout.type]}</span>
-                {index < workouts.length - 1 && (
-                  <span className="mx-1" style={{ color: color }}>
-                    +
-                  </span>
-                )}
-              </span>
-            ))}
-            <span
-              className="ml-2 text-xs"
-              style={{ color: color, opacity: 0.75 }}
-            >
-              ({workouts.length} workout{workouts.length > 1 ? "s" : ""})
-            </span>
-          </div>
-        ) : (
-          <span style={{ color: color }}>
-            <MyIcon icon="fa-duotone fa-thin fa-potato" />
+          <FontAwesomeIcon
+            icon={faDumbbell}
+            className="text-xs flex-shrink-0"
+            style={{
+              color: color,
+            }}
+          />
+          <span
+            className="font-medium transition-colors duration-300"
+            style={{
+              color: titleColor,
+            }}
+          >
+            Today&apos;s Gains:
           </span>
-        )}
+          {workouts.length > 0 ? (
+            <div className="flex items-center space-x-1">
+              {workouts.map((workout, index) => (
+                <span key={workout.id} className="flex items-center">
+                  <span style={{ color: color }}>{iconMap[workout.type]}</span>
+                  {index < workouts.length - 1 && (
+                    <span className="mx-1" style={{ color: color }}>
+                      +
+                    </span>
+                  )}
+                </span>
+              ))}
+              <span
+                className="ml-2 text-xs"
+                style={{ color: color, opacity: 0.75 }}
+              >
+                ({workouts.length} workout{workouts.length > 1 ? "s" : ""})
+              </span>
+            </div>
+          ) : (
+            <span style={{ color: color }}>
+              <MyIcon icon="fa-duotone fa-thin fa-potato" />
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Strava icon - fades in when hovered, positioned absolutely */}
       <div
-        className="absolute inset-0 flex items-center justify-center transition-opacity duration-200 pointer-events-none"
+        className={`workout-logos absolute inset-0 flex items-center justify-center ${showLogos ? "show" : ""}`}
         style={{
-          opacity: showLogos ? 1 : 0,
-          transitionDelay: showLogos ? '150ms' : '0ms'
+          pointerEvents: showLogos ? "auto" : "none",
         }}
       >
         <a
           href="https://strava.app.link/W4daBrWP5Xb"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:scale-110 transition-transform duration-200"
-          style={{
-            pointerEvents: showLogos ? 'auto' : 'none',
-            cursor: showLogos ? 'pointer' : 'default'
-          }}
+          className="transform transition-transform duration-200 hover:scale-110 active:scale-95"
+          aria-label="Open on Strava"
         >
           <FontAwesomeIcon
             icon={faStrava}
             className="text-3xl"
-            style={{ color: '#FC4C02' }}
+            style={{ color: "#FC4C02" }}
           />
         </a>
       </div>
