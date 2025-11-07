@@ -122,30 +122,38 @@ const MusicHistory = () => {
     // Only handle if not loading and no error
     if (isLoading || error) return;
 
-    // Check if clicking on a logo link
-    const linkElement = e.target.closest('a');
-    if (linkElement) {
-      // If logos are showing, allow the link click
-      if (isMobileOpen || isHovered) {
-        // Reset mobile state before navigation so it doesn't persist
-        setIsMobileOpen(false);
-        return; // Let the link handle it
-      }
-      // Otherwise, show logos and prevent navigation
-      e.preventDefault();
-      e.stopPropagation();
+    // Don't handle if hovering (desktop behavior)
+    if (isHovered) return;
+
+    // Prevent default behavior and stop propagation
+    e.preventDefault();
+    e.stopPropagation();
+
+    // If logos are not showing, show them (first tap)
+    if (!isMobileOpen) {
       setIsMobileOpen(true);
       return;
     }
 
-    // Prevent event from bubbling when clicking the container
-    e.stopPropagation();
+    // If logos are showing and user clicked a link, allow navigation
+    const linkElement = e.target.closest('a');
+    if (linkElement && isMobileOpen) {
+      // Close the menu and navigate
+      setIsMobileOpen(false);
+      // Use setTimeout to ensure state updates before navigation
+      setTimeout(() => {
+        window.open(linkElement.href, '_blank', 'noopener,noreferrer');
+      }, 0);
+      return;
+    }
 
-    // Toggle mobile state on container click
-    setIsMobileOpen(!isMobileOpen);
+    // If logos are showing and user clicked container (not a link), close them
+    if (isMobileOpen) {
+      setIsMobileOpen(false);
+    }
   };
 
-  // Close mobile menu when clicking outside
+  // Close mobile menu when clicking outside or scrolling
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (isMobileOpen && !e.target.closest('[data-music-history]')) {
@@ -153,21 +161,20 @@ const MusicHistory = () => {
       }
     };
 
-    document.addEventListener('click', handleClickOutside, true);
-    return () => document.removeEventListener('click', handleClickOutside, true);
-  }, [isMobileOpen]);
-
-  // Reset mobile open state when navigating back to page
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
+    const handleScroll = () => {
+      if (isMobileOpen) {
         setIsMobileOpen(false);
       }
     };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, []);
+    document.addEventListener('click', handleClickOutside, true);
+    window.addEventListener('scroll', handleScroll, true);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+      window.removeEventListener('scroll', handleScroll, true);
+    };
+  }, [isMobileOpen]);
 
   // Determine if logos should be visible (hover for desktop, isMobileOpen for mobile)
   const showLogos = isHovered || isMobileOpen;
@@ -214,12 +221,9 @@ const MusicHistory = () => {
           target="_blank"
           rel="noopener noreferrer"
           className="hover:scale-110 transition-transform duration-200"
-          style={{ pointerEvents: showLogos ? 'auto' : 'none' }}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!showLogos) {
-              e.preventDefault();
-            }
+          style={{
+            pointerEvents: showLogos ? 'auto' : 'none',
+            cursor: showLogos ? 'pointer' : 'default'
           }}
         >
           <FontAwesomeIcon
@@ -234,12 +238,9 @@ const MusicHistory = () => {
           target="_blank"
           rel="noopener noreferrer"
           className="hover:scale-110 transition-transform duration-200"
-          style={{ pointerEvents: showLogos ? 'auto' : 'none' }}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!showLogos) {
-              e.preventDefault();
-            }
+          style={{
+            pointerEvents: showLogos ? 'auto' : 'none',
+            cursor: showLogos ? 'pointer' : 'default'
           }}
         >
           <FontAwesomeIcon
