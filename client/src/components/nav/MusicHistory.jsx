@@ -21,6 +21,7 @@ const MusicHistory = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { colorScheme } = useColorContext();
   const color = colorScheme.accent.replace('text-[', '').replace(']', ''); // Extract hex color
   const titleColor = colorScheme.title.replace('text-[', '').replace(']', ''); // Extract title color
@@ -116,19 +117,57 @@ const MusicHistory = () => {
     return `https://music.apple.com/us/search?term=${encodeURIComponent(topArtist.artist_name)}`;
   }, [topArtist]);
 
+  // Handle click for mobile - toggle logo visibility
+  const handleClick = (e) => {
+    // Only handle if not loading and no error
+    if (isLoading || error) return;
+
+    // Check if clicking on a logo link
+    if (e.target.closest('a')) {
+      // If logos are showing, allow the link click
+      if (isMobileOpen || isHovered) {
+        return; // Let the link handle it
+      }
+      // Otherwise, show logos and prevent navigation
+      e.preventDefault();
+      setIsMobileOpen(true);
+      return;
+    }
+
+    // Toggle mobile state on container click
+    setIsMobileOpen(!isMobileOpen);
+  };
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (isMobileOpen && !e.target.closest('[data-music-history]')) {
+        setIsMobileOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isMobileOpen]);
+
+  // Determine if logos should be visible (hover for desktop, isMobileOpen for mobile)
+  const showLogos = isHovered || isMobileOpen;
+
   return (
     <div
+      data-music-history
       className="relative flex items-center gap-2 px-4 whitespace-nowrap cursor-pointer transition-all duration-300"
       onMouseEnter={() => !isLoading && !error && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
     >
       <FontAwesomeIcon
         icon={faHeadphones}
         className="text-xl transition-opacity duration-300 delay-150"
         style={{
           color: color,
-          opacity: isHovered ? 0 : 1,
-          transitionDelay: isHovered ? '0ms' : '150ms'
+          opacity: showLogos ? 0 : 1,
+          transitionDelay: showLogos ? '0ms' : '150ms'
         }}
       />
 
@@ -136,8 +175,8 @@ const MusicHistory = () => {
       <span
         className="transition-opacity duration-300 delay-150"
         style={{
-          opacity: isHovered ? 0 : 1,
-          transitionDelay: isHovered ? '0ms' : '150ms'
+          opacity: showLogos ? 0 : 1,
+          transitionDelay: showLogos ? '0ms' : '150ms'
         }}
       >
         {artistDisplay}
@@ -147,8 +186,8 @@ const MusicHistory = () => {
       <div
         className="absolute inset-0 flex items-center justify-center gap-4 transition-opacity duration-200 pointer-events-none"
         style={{
-          opacity: isHovered ? 1 : 0,
-          transitionDelay: isHovered ? '150ms' : '0ms'
+          opacity: showLogos ? 1 : 0,
+          transitionDelay: showLogos ? '150ms' : '0ms'
         }}
       >
         <a
@@ -156,8 +195,13 @@ const MusicHistory = () => {
           target="_blank"
           rel="noopener noreferrer"
           className="hover:scale-110 transition-transform duration-200"
-          style={{ pointerEvents: isHovered ? 'auto' : 'none' }}
-          onClick={(e) => e.stopPropagation()}
+          style={{ pointerEvents: showLogos ? 'auto' : 'none' }}
+          onClick={(e) => {
+            if (!showLogos) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }}
         >
           <FontAwesomeIcon
             icon={faSpotify}
@@ -171,8 +215,13 @@ const MusicHistory = () => {
           target="_blank"
           rel="noopener noreferrer"
           className="hover:scale-110 transition-transform duration-200"
-          style={{ pointerEvents: isHovered ? 'auto' : 'none' }}
-          onClick={(e) => e.stopPropagation()}
+          style={{ pointerEvents: showLogos ? 'auto' : 'none' }}
+          onClick={(e) => {
+            if (!showLogos) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }}
         >
           <FontAwesomeIcon
             icon={faApple}
