@@ -1,48 +1,44 @@
-import { useEffect, useState, useRef, useMemo, memo } from 'react';
+import { useEffect, useState, useMemo, memo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
+import { faSpotify, faApple } from '@fortawesome/free-brands-svg-icons';
 import { useColorContext } from '../../context/ColorContext';
 
 /**
  * MusicHistory Component
  * ----------------------
- * Displays recent music listening history from personal_data.listening_history collection
+ * Displays top artist from the last 60 days from personal_data.listening_history collection
  *
  * Features:
- * - Fetches recent tracks on mount via REST API
- * - Receives real-time updates via WebSocket
- * - Shows "Now Playing" or "Recently Played" based on timestamp
- * - Displays track name and artist
- * - Links to Spotify/Apple Music
+ * - Fetches top artist on mount via REST API
+ * - Shows "On Repeat:" with the most listened to artist
+ * - Refreshes hourly
+ * - Shows Spotify/Apple Music icons that fade in on hover
  */
 
 const MusicHistory = () => {
-  const [currentTrack, setCurrentTrack] = useState(null);
+  const [topArtist, setTopArtist] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const wsRef = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
   const { colorScheme } = useColorContext();
   const color = colorScheme.accent.replace('text-[', '').replace(']', ''); // Extract hex color
 
-  // API and WebSocket URLs
+  // API URL
   const API_URL = import.meta.env.MODE === 'production'
-    ? 'https://vmellodev-production.up.railway.app/api/listening-history'
-    : (import.meta.env.VITE_MUSIC_API_URL || 'http://localhost:3000/api/listening-history');
+    ? 'https://vmellodev-production.up.railway.app/api/listening-history/top-artist'
+    : (import.meta.env.VITE_MUSIC_API_URL || 'http://localhost:3000/api/listening-history/top-artist');
 
-  const WS_URL = import.meta.env.MODE === 'production'
-    ? 'wss://vmellodev-production.up.railway.app'
-    : (import.meta.env.VITE_MUSIC_WS_URL || 'ws://localhost:3000');
-
-  // Fetch initial listening history
+  // Fetch top artist
   useEffect(() => {
-    const fetchListeningHistory = async () => {
+    const fetchTopArtist = async () => {
       try {
         setIsLoading(true);
         const response = await fetch(API_URL);
 
         if (!response.ok) {
           if (response.status === 404) {
-            setCurrentTrack(null);
+            setTopArtist(null);
             setIsLoading(false);
             return;
           }
@@ -51,144 +47,136 @@ const MusicHistory = () => {
 
         const data = await response.json();
 
-        if (data && data.length > 0) {
-          // Get most recent track
-          setCurrentTrack(data[0]);
+        if (data && data.artist_name) {
+          setTopArtist(data);
         }
 
         setError(null);
       } catch (err) {
-        console.error('Error fetching listening history:', err);
-        setError('Failed to load music history');
+        console.error('Error fetching top artist:', err);
+        setError('Failed to load top artist');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchListeningHistory();
+    fetchTopArtist();
+
+    // Refresh every hour
+    const interval = setInterval(fetchTopArtist, 3600000);
+    return () => clearInterval(interval);
   }, [API_URL]);
 
-  // WebSocket connection for real-time updates
-  useEffect(() => {
-    const connectWebSocket = () => {
-      try {
-        const ws = new WebSocket(WS_URL);
-        wsRef.current = ws;
-
-        ws.onopen = () => {
-          console.log('🔌 Connected to music WebSocket');
-        };
-
-        ws.onmessage = (event) => {
-          try {
-            const message = JSON.parse(event.data);
-
-            if (message.type === 'new_track' && message.track) {
-              console.log('🎵 Received new track:', message.track);
-              setCurrentTrack(message.track);
-            }
-          } catch (err) {
-            console.error('Error parsing WebSocket message:', err);
-          }
-        };
-
-        ws.onerror = (error) => {
-          console.error('WebSocket error:', error);
-        };
-
-        ws.onclose = () => {
-          console.log('🔌 Disconnected from music WebSocket');
-        };
-      } catch (err) {
-        console.error('Error connecting to WebSocket:', err);
-      }
-    };
-
-    connectWebSocket();
-
-    return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
-      }
-    };
-  }, [WS_URL]);
-
-  // Determine if track is "now playing" (within last 5 minutes)
-  const isNowPlaying = (timestamp) => {
-    if (!timestamp) return false;
-    const trackTime = new Date(timestamp);
-    const now = new Date();
-    const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
-    return trackTime >= fiveMinutesAgo;
-  };
-
-  // Format track display
-  const getTrackDisplay = () => {
+  // Memoize artist display to prevent recalculation
+  const artistDisplay = useMemo(() => {
     if (isLoading) return 'Loading...';
     if (error) return error;
-    if (!currentTrack) return 'No recent tracks';
-
-    const label = isNowPlaying(currentTrack.timestamp) ? 'Now Playing:' : 'Recently Played:';
-    const trackInfo = `${currentTrack.track_name} - ${currentTrack.artist_name}`;
+    if (!topArtist) return 'No listening data';
 
     return (
       <>
-        <span className="font-semibold">{label}</span> {trackInfo}
+        <span className="font-semibold">On Repeat:</span> {topArtist.artist_name}
       </>
     );
-  };
+  }, [topArtist, isLoading, error]);
 
-  // Memoize external link to prevent recalculation
-  const externalLink = useMemo(() => {
-    if (!currentTrack) return null;
+  // Generate platform URLs
+  // For Spotify: Use direct artist link if we have URI, otherwise search
+  const spotifyUrl = useMemo(() => {
+    if (!topArtist) return null;
 
-    if (currentTrack.spotify_uri) {
-      return `https://open.spotify.com/track/${currentTrack.spotify_uri.split(':')[2]}`;
-    } else if (currentTrack.apple_music_id) {
-      return `https://music.apple.com/us/song/${currentTrack.apple_music_id}`;
+    if (topArtist.spotify_uri) {
+      // Extract artist ID from Spotify URI (format: spotify:artist:ID or spotify:track:ID)
+      const uriParts = topArtist.spotify_uri.split(':');
+      if (uriParts[1] === 'artist') {
+        return `https://open.spotify.com/artist/${uriParts[2]}`;
+      }
+      // If it's a track URI, link to the track (user can navigate to artist from there)
+      if (uriParts[1] === 'track') {
+        return `https://open.spotify.com/track/${uriParts[2]}`;
+      }
     }
 
-    return null;
-  }, [currentTrack]);
+    // Fallback to search
+    return `https://open.spotify.com/search/${encodeURIComponent(topArtist.artist_name)}`;
+  }, [topArtist]);
 
-  // Memoize track display to prevent recalculation
-  const trackDisplay = useMemo(() => {
-    if (isLoading) return 'Loading...';
-    if (error) return error;
-    if (!currentTrack) return 'No recent tracks';
+  // For Apple Music: Use direct artist link if we have ID, otherwise search
+  const appleMusicUrl = useMemo(() => {
+    if (!topArtist) return null;
 
-    const label = isNowPlaying(currentTrack.timestamp) ? 'Now Playing:' : 'Recently Played:';
-    const trackInfo = `${currentTrack.track_name} - ${currentTrack.artist_name}`;
+    if (topArtist.apple_music_artist_id) {
+      // Direct link to artist page
+      return `https://music.apple.com/us/artist/${topArtist.apple_music_artist_id}`;
+    }
 
-    return (
-      <>
-        <span className="font-semibold">{label}</span> {trackInfo}
-      </>
-    );
-  }, [currentTrack, isLoading, error]);
+    // Fallback to search
+    return `https://music.apple.com/us/search?term=${encodeURIComponent(topArtist.artist_name)}`;
+  }, [topArtist]);
 
   return (
-    <div className="flex items-center gap-2 px-4 whitespace-nowrap">
+    <div
+      className="relative flex items-center gap-2 px-4 whitespace-nowrap cursor-pointer transition-all duration-300"
+      onMouseEnter={() => !isLoading && !error && setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <FontAwesomeIcon
         icon={faHeadphones}
-        className="text-xl"
-        style={{ color: color }}
+        className="text-xl transition-opacity duration-300"
+        style={{
+          color: color,
+          opacity: isHovered ? 0 : 1
+        }}
       />
-      {externalLink ? (
+
+      {/* Artist name - fades out when hovered */}
+      <span
+        className="transition-opacity duration-300"
+        style={{
+          color: color,
+          opacity: isHovered ? 0 : 1
+        }}
+      >
+        {artistDisplay}
+      </span>
+
+      {/* Music platform icons - fade in when hovered, positioned absolutely */}
+      <div
+        className="absolute inset-0 flex items-center justify-center gap-4 transition-opacity duration-300 pointer-events-none"
+        style={{
+          opacity: isHovered ? 1 : 0,
+        }}
+      >
         <a
-          href={externalLink}
+          href={spotifyUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:opacity-80 transition-opacity"
-          style={{ color: color }}
+          className="hover:scale-110 transition-transform duration-200"
+          style={{ pointerEvents: isHovered ? 'auto' : 'none' }}
+          onClick={(e) => e.stopPropagation()}
         >
-          {trackDisplay}
+          <FontAwesomeIcon
+            icon={faSpotify}
+            className="text-3xl"
+            style={{ color: '#1DB954' }}
+          />
         </a>
-      ) : (
-        <span style={{ color: color }}>
-          {trackDisplay}
-        </span>
-      )}
+
+        <a
+          href={appleMusicUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:scale-110 transition-transform duration-200"
+          style={{ pointerEvents: isHovered ? 'auto' : 'none' }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <FontAwesomeIcon
+            icon={faApple}
+            className="text-3xl"
+            style={{ color: colorScheme.bg === 'bg-[#000000]' ? '#ffffff' : '#000000' }}
+          />
+        </a>
+      </div>
     </div>
   );
 };
