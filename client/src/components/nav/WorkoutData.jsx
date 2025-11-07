@@ -224,16 +224,23 @@ function WorkoutData() {
   // Handle click for mobile - toggle logo visibility
   const handleClick = (e) => {
     // Check if clicking on the Strava link
-    if (e.target.closest('a')) {
+    const linkElement = e.target.closest('a');
+    if (linkElement) {
       // If logos are showing, allow the link click
       if (isMobileOpen || isHovered) {
+        // Reset mobile state before navigation so it doesn't persist
+        setIsMobileOpen(false);
         return; // Let the link handle it
       }
       // Otherwise, show logos and prevent navigation
       e.preventDefault();
+      e.stopPropagation();
       setIsMobileOpen(true);
       return;
     }
+
+    // Prevent event from bubbling when clicking the container
+    e.stopPropagation();
 
     // Toggle mobile state on container click
     setIsMobileOpen(!isMobileOpen);
@@ -247,9 +254,21 @@ function WorkoutData() {
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    document.addEventListener('click', handleClickOutside, true);
+    return () => document.removeEventListener('click', handleClickOutside, true);
   }, [isMobileOpen]);
+
+  // Reset mobile open state when navigating back to page
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        setIsMobileOpen(false);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
   // Determine if logos should be visible (hover for desktop, isMobileOpen for mobile)
   const showLogos = isHovered || isMobileOpen;
@@ -401,9 +420,9 @@ function WorkoutData() {
           className="hover:scale-110 transition-transform duration-200"
           style={{ pointerEvents: showLogos ? 'auto' : 'none' }}
           onClick={(e) => {
+            e.stopPropagation();
             if (!showLogos) {
               e.preventDefault();
-              e.stopPropagation();
             }
           }}
         >
