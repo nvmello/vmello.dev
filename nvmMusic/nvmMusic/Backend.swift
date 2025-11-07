@@ -164,17 +164,80 @@ class MusicBackend: ObservableObject {
         }
     }
 
+    // MARK: - Detailed Song Information
+
+    /// Fetches complete song metadata from Apple Music API
+    /// Returns enriched metadata including album, genre, artwork, etc.
+    private func fetchDetailedSongInfo(songID: MusicItemID) async -> (albumName: String, albumArtworkUrl: String?, genre: String?, releaseDate: String?, isrc: String?, composerName: String?, contentRating: String?)? {
+        do {
+            // Create a request for the specific song with relationships
+            var request = MusicCatalogResourceRequest<Song>(matching: \.id, equalTo: songID)
+            let response = try await request.response()
+
+            guard let detailedSong = response.items.first else {
+                print("⚠️  Could not fetch detailed song info for ID: \(songID.rawValue)")
+                return nil
+            }
+
+            // Extract album information
+            let albumName = detailedSong.albumTitle ?? "Unknown Album"
+
+            // Extract artwork URL (300x300 size for good quality)
+            let albumArtworkUrl = detailedSong.artwork?.url(width: 300, height: 300)?.absoluteString
+
+            // Extract genre (first genre if multiple)
+            let genre = detailedSong.genreNames.first
+
+            // Extract release date
+            let releaseDate: String?
+            if let releaseD = detailedSong.releaseDate {
+                let formatter = ISO8601DateFormatter()
+                formatter.formatOptions = [.withFullDate]
+                releaseDate = formatter.string(from: releaseD)
+            } else {
+                releaseDate = nil
+            }
+
+            // Extract ISRC
+            let isrc = detailedSong.isrc
+
+            // Extract composer name
+            let composerName = detailedSong.composerName
+
+            // Extract content rating (explicit/clean)
+            let contentRating = detailedSong.contentRating?.rawValue
+
+            print("✅ Fetched detailed info: \(detailedSong.title) - Album: \(albumName)")
+
+            return (albumName, albumArtworkUrl, genre, releaseDate, isrc, composerName, contentRating)
+
+        } catch {
+            print("❌ Error fetching detailed song info: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
     // MARK: - Listening Record Creation
 
     private func createListeningRecord(song: Song, duration: TimeInterval, skipped: Bool = false) async {
-        // Only access properties that are guaranteed to be available to avoid warnings
-        // Title, artistName, id, and duration are always populated
+        // Fetch detailed song information from Apple Music API
+        let detailedInfo = await fetchDetailedSongInfo(songID: song.id)
+
+        // Use enriched metadata if available, fallback to basic data
+        let albumName = detailedInfo?.albumName ?? "Unknown Album"
+        let albumArtworkUrl = detailedInfo?.albumArtworkUrl
+        let genre = detailedInfo?.genre
+        let releaseDate = detailedInfo?.releaseDate
+        let isrc = detailedInfo?.isrc
+        let composerName = detailedInfo?.composerName
+        let contentRating = detailedInfo?.contentRating
+
         let record = ListeningRecord(
             id: "\(ISO8601DateFormatter().string(from: Date()))-\(song.id.rawValue)",
             timestamp: Date(),
             trackName: song.title,
             artistName: song.artistName,
-            albumName: "Unknown Album", // Skip albumTitle to avoid warnings
+            albumName: albumName,
             msPlayed: duration * 1000, // Convert to milliseconds
             platform: "ios",
             source: "apple_music",
@@ -183,7 +246,13 @@ class MusicBackend: ObservableObject {
             metadata: [
                 "duration_ms": String(Int((song.duration ?? 0) * 1000)),
                 "skipped": skipped ? "true" : "false"
-            ]
+            ],
+            albumArtworkUrl: albumArtworkUrl,
+            genre: genre,
+            releaseDate: releaseDate,
+            isrc: isrc,
+            composerName: composerName,
+            contentRating: contentRating
         )
 
         await MainActor.run {

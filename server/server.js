@@ -331,6 +331,27 @@ async function getWorkoutsHandler(req, res) {
  * ------------------------------------------
  * POST /api/listening-history
  *
+ * Expected Body Fields:
+ * - id: Unique identifier for this listening record
+ * - timestamp: When the track was played
+ * - track_name: Song title
+ * - artist_name: Artist name
+ * - album_name: Album title
+ * - ms_played: Duration played in milliseconds
+ * - platform: "ios" | "web" | etc.
+ * - source: "apple_music" | "spotify" | etc.
+ * - apple_music_id: Apple Music catalog ID (optional)
+ * - spotify_uri: Spotify URI (optional)
+ * - metadata: Additional metadata object
+ *
+ * Rich Metadata Fields (optional):
+ * - album_artwork_url: URL to album artwork
+ * - genre: Primary genre
+ * - release_date: ISO date string
+ * - isrc: International Standard Recording Code
+ * - composer_name: Composer/writer
+ * - content_rating: "explicit" | "clean" | null
+ *
  * Flow:
  * 1. Validates track data
  * 2. Checks for duplicates
