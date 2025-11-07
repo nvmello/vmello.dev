@@ -17,8 +17,17 @@ struct ListeningRecord: Codable {
     let platform: String
     let source: String
     let appleMusicId: String?
+    let appleMusicArtistId: String?
     let spotifyUri: String?
     let metadata: [String: String]
+
+    // Rich metadata from Apple Music API
+    let albumArtworkUrl: String?
+    let genre: String?
+    let releaseDate: String?
+    let isrc: String?
+    let composerName: String?
+    let contentRating: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -30,7 +39,14 @@ struct ListeningRecord: Codable {
         case platform
         case source
         case appleMusicId = "apple_music_id"
+        case appleMusicArtistId = "apple_music_artist_id"
         case spotifyUri = "spotify_uri"
         case metadata
+        case albumArtworkUrl = "album_artwork_url"
+        case genre
+        case releaseDate = "release_date"
+        case isrc
+        case composerName = "composer_name"
+        case contentRating = "content_rating"
     }
 }

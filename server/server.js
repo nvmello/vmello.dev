@@ -331,6 +331,27 @@ async function getWorkoutsHandler(req, res) {
  * ------------------------------------------
  * POST /api/listening-history
  *
+ * Expected Body Fields:
+ * - id: Unique identifier for this listening record
+ * - timestamp: When the track was played
+ * - track_name: Song title
+ * - artist_name: Artist name
+ * - album_name: Album title
+ * - ms_played: Duration played in milliseconds
+ * - platform: "ios" | "web" | etc.
+ * - source: "apple_music" | "spotify" | etc.
+ * - apple_music_id: Apple Music catalog ID (optional)
+ * - spotify_uri: Spotify URI (optional)
+ * - metadata: Additional metadata object
+ *
+ * Rich Metadata Fields (optional):
+ * - album_artwork_url: URL to album artwork
+ * - genre: Primary genre
+ * - release_date: ISO date string
+ * - isrc: International Standard Recording Code
+ * - composer_name: Composer/writer
+ * - content_rating: "explicit" | "clean" | null
+ *
  * Flow:
  * 1. Validates track data
  * 2. Checks for duplicates
@@ -348,11 +369,8 @@ async function createListeningHistoryHandler(req, res) {
   try {
     const listeningHistory = client.db(DB_NAME).collection("listening_history");
 
-    const existingTrack = await listeningHistory.findOne({ id });
-    if (existingTrack) {
-      console.log("⚠️ Duplicate track detected with id:", id);
-      return res.status(409).json({ error: "Duplicate track detected" });
-    }
+    // No duplicate check - allow same song multiple times (just not within 30-song window on client)
+    // Client handles deduplication logic
 
     const trackData = {
       ...req.body,
@@ -492,12 +510,76 @@ async function getListeningStatsHandler(req, res) {
   }
 }
 
+/**
+ * Route Handler: Get Top Artist in Last 60 Days
+ * -------------------------------------------
+ * GET /api/listening-history/top-artist
+ *
+ * Returns the most listened to artist in the last 60 days
+ * Includes sample track data to get Apple Music metadata
+ */
+async function getTopArtistHandler(req, res) {
+  try {
+    const listeningHistory = client.db(DB_NAME).collection("listening_history");
+
+    // Get date 60 days ago
+    const sixtyDaysAgo = new Date();
+    sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+
+    // Top artist in last 60 days with sample track for metadata
+    const topArtist = await listeningHistory
+      .aggregate([
+        { $match: { timestamp: { $gte: sixtyDaysAgo } } },
+        {
+          $group: {
+            _id: "$artist_name",
+            count: { $sum: 1 },
+            // Get the most recent track from this artist for metadata
+            sample_track: { $first: "$$ROOT" },
+          },
+        },
+        { $sort: { count: -1 } },
+        { $limit: 1 },
+      ])
+      .toArray();
+
+    if (!topArtist.length) {
+      return res.status(404).json({ message: "No listening history in the last 60 days" });
+    }
+
+    const result = {
+      artist_name: topArtist[0]._id,
+      play_count: topArtist[0].count,
+    };
+
+    // Add Apple Music Artist ID if available
+    if (topArtist[0].sample_track?.apple_music_artist_id) {
+      result.apple_music_artist_id = topArtist[0].sample_track.apple_music_artist_id;
+    }
+
+    // Add Spotify URI if available
+    if (topArtist[0].sample_track?.spotify_uri) {
+      result.spotify_uri = topArtist[0].sample_track.spotify_uri;
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error("❌ Error fetching top artist:", error);
+    res.status(500).json({
+      error: "Failed to fetch top artist",
+      message:
+        process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
+  }
+}
+
 // Route definitions
 app.post("/api/workouts", createWorkoutHandler);
 app.get("/api/workouts", getWorkoutsHandler);
 app.post("/api/listening-history", createListeningHistoryHandler);
 app.get("/api/listening-history", getListeningHistoryHandler);
 app.get("/api/listening-history/stats", getListeningStatsHandler);
+app.get("/api/listening-history/top-artist", getTopArtistHandler);
 
 /**
  * Graceful Shutdown Handler
