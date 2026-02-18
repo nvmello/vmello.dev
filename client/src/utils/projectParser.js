@@ -5,15 +5,15 @@
 
 // Import markdown files directly (Vite-compatible approach)
 import nextgearCapitalMd from "../projects/nextgear-capital.md?raw";
+import hueUMd from "../projects/hue-u.md?raw";
 import raytheonEmbeddedMd from "../projects/raytheon-embedded.md?raw";
-import audiocrateSystemMd from "../projects/audiocrate-system.md?raw";
 import vmelloDevMd from "../projects/vmello.dev.md?raw";
 
 // Project files mapping
 const projectFiles = {
   "nextgear-capital.md": nextgearCapitalMd,
+  "hue-u.md": hueUMd,
   "raytheon-embedded.md": raytheonEmbeddedMd,
-  "audiocrate-system.md": audiocrateSystemMd,
   "vmello.dev.md": vmelloDevMd,
 };
 
@@ -101,13 +101,13 @@ export const loadAllProjects = () => {
     }
   }
 
-  // Sort by custom order: Nextgear, Raytheon, vmello.dev, AudioCrate
+  // Sort by custom order: Nextgear, Hue U, Raytheon, vmello.dev
   return projects.sort((a, b) => {
     const customOrder = {
       "nextgear-capital": 0,
-      "raytheon-embedded": 1,
-      "vmello.dev": 2,
-      "audiocrate-system": 3,
+      "hue-u": 1,
+      "raytheon-embedded": 2,
+      "vmello.dev": 3,
     };
     
     const aOrder = customOrder[a.filename] ?? 99;

@@ -6,15 +6,20 @@ function SectionOne() {
       <SectionHeader icon="fa-duotone fa-solid fa-user" title="About me" />
       <SectionContent>
         <p>
-          I&apos;m Nick, a software engineer who loves translating ideas into solutions. 
-          I&apos;m fascinated by AI and how it&apos;s reshaping how we communicate intent and solve problems.
+          I'm Nick, a software engineer focused on building systems that turn ideas
+          into working software. I'm particularly interested in how AI is changing
+          the way we design, communicate, and ship.
         </p>
         <p>
-          When I&apos;m not building systems, you&apos;ll find me rock climbing, lifting weights, 
-          or exploring new places with my camera. I studied Computer Science at Arizona State University.
+          A lot of my focus is on reducing friction, improving how work flows, and
+          finding better ways to turn intent into working systems. I'm motivated
+          by building systems that save time, reduce complexity, and help people
+          focus on what actually matters.
         </p>
         <p>
-          Let&apos;s connect.
+          Outside of engineering, I spend time rock climbing, lifting, and exploring
+          new places with my camera. I studied Computer Science at Arizona State
+          University.
         </p>
       </SectionContent>
     </>

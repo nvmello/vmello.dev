@@ -212,23 +212,23 @@ const ProjectCard = ({ project, index }) => {
 
         {/* Links */}
         {project.linkList && Object.keys(project.linkList).length > 0 && (
-          <div className="flex space-x-4 mt-auto">
+          <div className="flex space-x-3 mt-auto">
             {project.linkList.github && (
               <a
                 href={project.linkList.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`
-                  flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200
+                  flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200
                   ${
                     colorScheme.bg === "bg-[#000000]"
-                      ? "bg-[#030303] hover:bg-[#111111] text-gray-400 hover:text-white border border-[#111111] hover:border-[#00ff00]"
-                      : "bg-gray-200 hover:bg-gray-300 text-gray-700 hover:text-gray-900"
+                      ? "text-gray-400 hover:text-white border border-[#111111] hover:border-[#333]"
+                      : "text-gray-600 hover:text-gray-900 border border-gray-300 hover:border-gray-400"
                   }
                 `}
               >
-                <MyIcon icon="fa-brands fa-github" size="text-sm" />
-                <span className="text-sm">Code</span>
+                <MyIcon icon="fa-brands fa-github" size="text-xs" />
+                <span>Code</span>
               </a>
             )}
             {project.linkList["live demo"] && (
@@ -237,16 +237,34 @@ const ProjectCard = ({ project, index }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`
-                  flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200
+                  flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200
                   ${
                     colorScheme.bg === "bg-[#000000]"
-                      ? "bg-[#00ff00] hover:bg-[#00ff00]/80 text-black"
-                      : "bg-green-600 hover:bg-green-700 text-white"
+                      ? "text-gray-400 hover:text-white border border-[#111111] hover:border-[#333]"
+                      : "text-gray-600 hover:text-gray-900 border border-gray-300 hover:border-gray-400"
                   }
                 `}
               >
-                <MyIcon icon="fa-solid fa-external-link" size="text-sm" />
-                <span className="text-sm">Live Demo</span>
+                <MyIcon icon="fa-solid fa-external-link" size="text-xs" />
+                <span>Live Demo</span>
+              </a>
+            )}
+            {project.linkList.website && (
+              <a
+                href={project.linkList.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`
+                  flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200
+                  ${
+                    colorScheme.bg === "bg-[#000000]"
+                      ? "text-gray-400 hover:text-white border border-[#111111] hover:border-[#333]"
+                      : "text-gray-600 hover:text-gray-900 border border-gray-300 hover:border-gray-400"
+                  }
+                `}
+              >
+                <MyIcon icon="fa-solid fa-external-link" size="text-xs" />
+                <span>Website</span>
               </a>
             )}
           </div>

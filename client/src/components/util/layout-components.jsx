@@ -22,7 +22,7 @@ export const SectionHeader = ({ icon, title, size = "text-xl", children }) => {
       <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-4">
         <div className={`${colorScheme.title} flex gap-3`}>
           <MyIcon icon={icon} size={size} />
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-medium tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>
             {title}
           </h1>
         </div>
@@ -46,7 +46,8 @@ export const SectionContent = ({ children }) => {
   const { colorScheme } = useColorContext();
   return (
     <div
-      className={`${colorScheme.text}  m-10 text-base sm:text-xl md:text-2xl space-y-2 sm:space-y-4 overflow-visible break-words leading-relaxed mx-auto `}
+      className={`${colorScheme.text} m-10 text-base sm:text-lg space-y-3 sm:space-y-5 overflow-visible break-words mx-auto`}
+      style={{ lineHeight: '1.7' }}
     >
       {children}
     </div>

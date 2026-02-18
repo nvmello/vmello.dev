@@ -1,8 +1,10 @@
-# Backend Software Engineer - Nextgear Capital
+# Backend Software Engineer, Nextgear Capital
 
 ## Description
 
-Backend software engineer developing and maintaining Java Spring Boot applications that power mobile app services for automotive dealers. Work closely with mobile development team to design robust APIs and ensure seamless data flow for dealer inventory management and financing solutions.
+Backend software engineer working on Java Spring Boot services that support mobile and dealer-facing applications.
+
+More recently, my role has shifted toward improving how software is built across teams. This includes exploring new development patterns, reducing friction in everyday workflows, and finding ways to help engineers work more efficiently in a multi-service environment.
 
 ## Status
 
@@ -17,17 +19,15 @@ experience
 - Java
 - Spring Boot
 - REST APIs
-- Database Management
-- Mobile App Backend
 - Microservices Architecture
+- Node.js
 
 ## Features
 
-- Mobile app backend services
-- Dealer inventory management systems
-- API design and development
-- Database optimization
-- Cross-team collaboration with mobile developers
+- Backend services for mobile and dealer-facing applications
+- API design and microservices architecture
+- Improving developer workflows and consistency across teams
+- Cross-team collaboration
 
 ## Duration
 

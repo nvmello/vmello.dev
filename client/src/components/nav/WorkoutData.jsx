@@ -424,7 +424,7 @@ function WorkoutData() {
               color: titleColor,
             }}
           >
-            Today&apos;s Gains:
+            Today's Gains:
           </span>
           {workouts.length > 0 ? (
             <div className="flex items-center space-x-1">
