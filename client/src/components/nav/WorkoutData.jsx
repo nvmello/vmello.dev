@@ -329,11 +329,7 @@ function WorkoutData() {
         <div
           className={`
           flex items-center space-x-2 px-3 py-1 rounded-full
-          ${
-            colorScheme.bg === "bg-[#000000]"
-              ? "bg-red-900/80 border border-red-800"
-              : "bg-red-100/80 border border-red-200"
-          }
+          ${colorScheme.pillError}
         `}
         >
           <FontAwesomeIcon
@@ -345,11 +341,7 @@ function WorkoutData() {
             }}
           />
           <span
-            className={`${
-              colorScheme.bg === "bg-[#000000]"
-                ? "text-red-400"
-                : "text-red-600"
-            } font-medium text-xs`}
+            className={`${colorScheme.errorText} font-medium text-xs`}
           >
             API Error
           </span>
@@ -365,21 +357,13 @@ function WorkoutData() {
         <div
           className={`
           flex items-center space-x-2 px-3 py-1 rounded-full
-          ${
-            colorScheme.bg === "bg-[#000000]"
-              ? "bg-[#030303] border border-[#111111]"
-              : "bg-gray-100/80 border border-gray-200"
-          }
+          ${colorScheme.pill}
         `}
         >
           <div className="animate-spin">
             <MyIcon
               icon="fa-solid fa-spinner"
-              size={`text-xs ${
-                colorScheme.bg === "bg-[#000000]"
-                  ? "text-[#00ff00]"
-                  : "text-green-600"
-              }`}
+              size={`text-xs ${colorScheme.title}`}
             />
           </div>
           <span className={`${colorScheme.text} font-medium`}>
@@ -404,11 +388,7 @@ function WorkoutData() {
         <div
           className={`
           flex items-center space-x-2 px-3 py-1 rounded-full
-          ${
-            colorScheme.bg === "bg-[#000000]"
-              ? "bg-[#030303] border border-[#111111]"
-              : "bg-gray-100/80 border border-gray-200"
-          }
+          ${colorScheme.pill}
         `}
         >
           <FontAwesomeIcon

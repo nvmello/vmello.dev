@@ -70,21 +70,21 @@ const ProfessionalCard = ({ icon, link, label, description }) => {
       onMouseLeave={handleMouseLeave}
       className={`
         relative p-8 rounded-lg border-2 transition-all duration-300
-        ${colorScheme.bg === 'bg-[#000000]' ? 'border-[#111111] hover:border-[#00ff00]' : 'border-gray-300 hover:border-green-600'}
+        ${colorScheme.border} ${colorScheme.borderHover}
         ${colorScheme.bg} group cursor-pointer
       `}
     >
       <div className="flex flex-col items-center text-center space-y-4">
         <div className={`
           p-4 rounded-full transition-all duration-300
-          ${colorScheme.bg === 'bg-[#000000]' ? 'bg-[#030303] group-hover:bg-[#00ff00]/10' : 'bg-gray-100 group-hover:bg-green-100'}
+          ${colorScheme.bgSubtle} ${colorScheme.bgAccentHover}
         `}>
-          <MyIcon 
-            icon={icon} 
-            size="text-3xl" 
+          <MyIcon
+            icon={icon}
+            size="text-3xl"
           />
         </div>
-        
+
         <div>
           <h3 className={`text-xl font-semibold mb-1 ${colorScheme.title}`}>
             {label}

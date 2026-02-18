@@ -14,7 +14,6 @@ export const WorkExperienceShowcase = () => {
   useEffect(() => {
     try {
       const loadedProjects = loadAllProjects();
-      // Filter only experience type items
       const workExperience = loadedProjects.filter(project => project.type === 'experience');
       setExperiences(workExperience);
     } catch (error) {
@@ -61,11 +60,7 @@ const ExperienceCard = ({ experience, index }) => {
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className={`
         relative rounded-xl border-2 p-6 transition-all duration-300
-        ${
-          colorScheme.bg === "bg-[#000000]"
-            ? "border-[#111111] hover:border-[#00ff00] bg-[#030303]"
-            : "border-gray-300 hover:border-green-600 bg-white/50"
-        }
+        ${colorScheme.border} ${colorScheme.borderHover} ${colorScheme.bgSubtle}
         group cursor-pointer
       `}
     >
@@ -73,47 +68,21 @@ const ExperienceCard = ({ experience, index }) => {
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div
-              className={`
-              p-2 rounded-lg
-              ${
-                colorScheme.bg === "bg-[#000000]"
-                  ? "bg-[#00ff00]/10"
-                  : "bg-green-100"
-              }
-            `}
-            >
+            <div className={`p-2 rounded-lg ${colorScheme.accentBg}`}>
               <MyIcon
                 icon={experience.icon || "fa-solid fa-briefcase"}
-                size={`text-xl ${
-                  colorScheme.bg === "bg-[#000000]"
-                    ? "text-[#00ff00]"
-                    : "text-green-600"
-                }`}
+                size={`text-xl ${colorScheme.accentIcon}`}
               />
             </div>
             <div>
               <h3
-                className={`text-xl font-bold ${
-                  colorScheme.title
-                } group-hover:${
-                  colorScheme.bg === "bg-[#000000]"
-                    ? "text-[#00ff00]"
-                    : "text-green-700"
-                } transition-colors`}
+                className={`text-xl font-bold ${colorScheme.title} transition-colors`}
               >
                 {experience.title}
               </h3>
               <div className="flex items-center space-x-2">
                 <span
-                  className={`
-                  text-xs px-2 py-1 rounded-full font-medium
-                  ${
-                    colorScheme.bg === "bg-[#000000]"
-                      ? "bg-[#00ff00]/20 text-[#00ff00]"
-                      : "bg-green-100 text-green-700"
-                  }
-                `}
+                  className={`text-xs px-2 py-1 rounded-full font-medium ${colorScheme.accentBadge}`}
                 >
                   {experience.status}
                 </span>
@@ -178,14 +147,7 @@ const ExperienceCard = ({ experience, index }) => {
               {experience.techStack.map((tech) => (
                 <span
                   key={tech}
-                  className={`
-                  px-2 py-1 text-xs rounded-md font-medium
-                  ${
-                    colorScheme.bg === "bg-[#000000]"
-                      ? "bg-[#030303] text-gray-400 border border-[#111111]"
-                      : "bg-gray-200 text-gray-700"
-                  }
-                `}
+                  className={`px-2 py-1 text-xs rounded-md font-medium ${colorScheme.techPill}`}
                 >
                   {tech}
                 </span>

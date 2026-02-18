@@ -72,25 +72,17 @@ function Spotify() {
       <div
         className={`
         flex items-center space-x-2 px-3 py-1 rounded-full
-        ${
-          colorScheme.bg === "bg-[#000000]"
-            ? "bg-[#030303] border border-[#111111]"
-            : "bg-gray-100/80 border border-gray-200"
-        }
+        ${colorScheme.pill}
       `}
       >
         <div
           className={`
           p-1 rounded-full
-          ${colorScheme.bg === "bg-[#000000]" ? "bg-[#00ff00]/20" : "bg-green-100"}
+          ${colorScheme.accentBg}
         `}
         >
           <svg
-            className={`w-3 h-3 ${
-              colorScheme.bg === "bg-[#000000]"
-                ? "text-[#00ff00]"
-                : "text-green-600"
-            }`}
+            className={`w-3 h-3 ${colorScheme.title}`}
             fill="currentColor"
             viewBox="0 0 24 24"
           >
@@ -104,11 +96,7 @@ function Spotify() {
           rel="noopener noreferrer"
           className={`
             transition-colors duration-200 font-medium max-w-xs truncate
-            ${
-              colorScheme.bg === "bg-[#000000]"
-                ? "text-[#00ff00] hover:text-[#00dd00]"
-                : "text-green-700 hover:text-green-800"
-            }
+            ${colorScheme.title}
           `}
         >
           {currentTrack.name}

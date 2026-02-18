@@ -59,11 +59,7 @@ const ProjectCard = ({ project, index }) => {
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className={`
         relative rounded-xl border-2 p-6 transition-all duration-300
-        ${
-          colorScheme.bg === "bg-[#000000]"
-            ? "border-[#111111] hover:border-[#00ff00] bg-[#030303]"
-            : "border-gray-300 hover:border-green-600 bg-white/50"
-        }
+        ${colorScheme.border} ${colorScheme.borderHover} ${colorScheme.bgSubtle}
         group cursor-pointer
       `}
     >
@@ -71,64 +67,29 @@ const ProjectCard = ({ project, index }) => {
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div
-              className={`
-              p-2 rounded-lg
-              ${
-                colorScheme.bg === "bg-[#000000]"
-                  ? "bg-[#00ff00]/10"
-                  : "bg-green-100"
-              }
-            `}
-            >
+            <div className={`p-2 rounded-lg ${colorScheme.accentBg}`}>
               <MyIcon
                 icon={project.icon || "fa-solid fa-code"}
-                size={`text-xl ${
-                  colorScheme.bg === "bg-[#000000]"
-                    ? "text-[#00ff00]"
-                    : "text-green-600"
-                }`}
+                size={`text-xl ${colorScheme.accentIcon}`}
               />
             </div>
             <div>
               <h3
-                className={`text-xl font-bold ${
-                  colorScheme.title
-                } group-hover:${
-                  colorScheme.bg === "bg-[#000000]"
-                    ? "text-[#00ff00]"
-                    : "text-green-700"
-                } transition-colors`}
+                className={`text-xl font-bold ${colorScheme.title} transition-colors`}
               >
                 {project.title}
               </h3>
               <div className="flex items-center space-x-2">
                 <span
-                  className={`
-                  text-xs px-2 py-1 rounded-full font-medium
-                  ${
-                    colorScheme.bg === "bg-[#000000]"
-                      ? "bg-[#00ff00]/20 text-[#00ff00]"
-                      : "bg-green-100 text-green-700"
-                  }
-                `}
+                  className={`text-xs px-2 py-1 rounded-full font-medium ${colorScheme.accentBadge}`}
                 >
                   {project.status}
                 </span>
                 {project.type === "experience" && (
                   <span
-                    className={`
-                    text-xs px-2 py-1 rounded-full font-medium
-                    ${
-                      colorScheme.bg === "bg-[#000000]"
-                        ? "bg-blue-500/20 text-blue-400"
-                        : "bg-blue-100 text-blue-700"
-                    }
-                  `}
+                    className={`text-xs px-2 py-1 rounded-full font-medium ${colorScheme.typeBadge}`}
                   >
-                    {project.type === "experience"
-                      ? "Work Experience"
-                      : "Project"}
+                    Work Experience
                   </span>
                 )}
               </div>
@@ -194,14 +155,7 @@ const ProjectCard = ({ project, index }) => {
               {project.techStack.map((tech) => (
                 <span
                   key={tech}
-                  className={`
-                    px-2 py-1 text-xs rounded-md font-medium
-                    ${
-                      colorScheme.bg === "bg-[#000000]"
-                        ? "bg-[#030303] text-gray-400 border border-[#111111]"
-                        : "bg-gray-200 text-gray-700"
-                    }
-                  `}
+                  className={`px-2 py-1 text-xs rounded-md font-medium ${colorScheme.techPill}`}
                 >
                   {tech}
                 </span>
@@ -218,14 +172,7 @@ const ProjectCard = ({ project, index }) => {
                 href={project.linkList.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`
-                  flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200
-                  ${
-                    colorScheme.bg === "bg-[#000000]"
-                      ? "text-gray-400 hover:text-white border border-[#111111] hover:border-[#333]"
-                      : "text-gray-600 hover:text-gray-900 border border-gray-300 hover:border-gray-400"
-                  }
-                `}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${colorScheme.linkBtn}`}
               >
                 <MyIcon icon="fa-brands fa-github" size="text-xs" />
                 <span>Code</span>
@@ -236,14 +183,7 @@ const ProjectCard = ({ project, index }) => {
                 href={project.linkList["live demo"]}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`
-                  flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200
-                  ${
-                    colorScheme.bg === "bg-[#000000]"
-                      ? "text-gray-400 hover:text-white border border-[#111111] hover:border-[#333]"
-                      : "text-gray-600 hover:text-gray-900 border border-gray-300 hover:border-gray-400"
-                  }
-                `}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${colorScheme.linkBtn}`}
               >
                 <MyIcon icon="fa-solid fa-external-link" size="text-xs" />
                 <span>Live Demo</span>
@@ -254,14 +194,7 @@ const ProjectCard = ({ project, index }) => {
                 href={project.linkList.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`
-                  flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200
-                  ${
-                    colorScheme.bg === "bg-[#000000]"
-                      ? "text-gray-400 hover:text-white border border-[#111111] hover:border-[#333]"
-                      : "text-gray-600 hover:text-gray-900 border border-gray-300 hover:border-gray-400"
-                  }
-                `}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${colorScheme.linkBtn}`}
               >
                 <MyIcon icon="fa-solid fa-external-link" size="text-xs" />
                 <span>Website</span>
