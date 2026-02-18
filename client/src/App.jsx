@@ -20,10 +20,10 @@ function App() {
     <ReactLenis root>
       <div className={`${colorScheme.bg} min-h-screen flex-grow`}>
         <Navbar />
-        <div className="container mx-auto overflow-y-auto">
+        <div className="container mx-auto">
           <hr className="mt-16" />
           <div id="about">
-            <section className="min-h-[35vh] overflow-y-auto">
+            <section className="min-h-[35vh]">
               <Section>
                 <SectionOne />
               </Section>
@@ -31,7 +31,7 @@ function App() {
           </div>
           <hr />
           <div id="projects">
-            <section className="min-h-[35vh] overflow-y-auto">
+            <section className="min-h-[35vh]">
               <Section>
                 <SectionTwo />
               </Section>
@@ -39,7 +39,7 @@ function App() {
           </div>
           <hr />
           <div id="connect">
-            <section className="min-h-[35vh] overflow-y-auto">
+            <section className="min-h-[35vh]">
               <Section>
                 <SectionThree />
               </Section>
@@ -47,7 +47,7 @@ function App() {
           </div>
           <hr />
           {/* <div id="photography">
-            <section className="min-h-[35vh] overflow-y-auto">
+            <section className="min-h-[35vh]">
               <Section>
                 <SectionFour />
               </Section>
