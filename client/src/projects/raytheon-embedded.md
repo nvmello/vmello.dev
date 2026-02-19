@@ -31,6 +31,10 @@ experience
 - Code optimization for resource-constrained environments
 - Compliance with aerospace software standards
 
+## Duration
+
+February 2023 – July 2025
+
 ## Company
 
 Raytheon Technologies

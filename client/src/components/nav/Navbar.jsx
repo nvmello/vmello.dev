@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import MyMarquee from "./MyMarquee";
 import NvmLogo from "./NvmLogo";
 import { useColorContext } from "../../context/ColorContext";
@@ -8,6 +9,32 @@ import { gsap } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
 gsap.registerPlugin(ScrollToPlugin);
+
+const HamburgerIcon = ({ isOpen, colorScheme }) => (
+  <div className="w-6 h-5 relative flex flex-col justify-between">
+    <motion.span
+      className={`block h-[2px] w-full rounded-full ${colorScheme.bg === "bg-[#000000]" ? "bg-gray-400" : "bg-gray-500"}`}
+      animate={isOpen ? { rotate: 45, y: 9 } : { rotate: 0, y: 0 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+    />
+    <motion.span
+      className={`block h-[2px] w-full rounded-full ${colorScheme.bg === "bg-[#000000]" ? "bg-gray-400" : "bg-gray-500"}`}
+      animate={isOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
+    />
+    <motion.span
+      className={`block h-[2px] w-full rounded-full ${colorScheme.bg === "bg-[#000000]" ? "bg-gray-400" : "bg-gray-500"}`}
+      animate={isOpen ? { rotate: -45, y: -9 } : { rotate: 0, y: 0 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+    />
+  </div>
+);
+
+const mobileLinks = [
+  { href: "#about", label: "About" },
+  { href: "#projects", label: "Projects" },
+  { href: "#connect", label: "Connect" },
+];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -71,41 +98,43 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className={`block px-3 py-2 ${colorScheme.bg} ${colorScheme.text} ${colorScheme.hover} text-2l font-bold`}
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
+              className="p-2"
             >
-              {isOpen ? "×" : "☰"}
+              <HamburgerIcon isOpen={isOpen} colorScheme={colorScheme} />
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <a
-                href="#about"
-                onClick={handleLinkClick}
-                className={`block px-3 py-2 ${colorScheme.title} ${colorScheme.hover}`}
-              >
-                About
-              </a>
-              <a
-                href="#projects"
-                onClick={handleLinkClick}
-                className={`block px-3 py-2 ${colorScheme.title} ${colorScheme.hover}`}
-              >
-                Projects
-              </a>
-              <a
-                href="#connect"
-                onClick={handleLinkClick}
-                className={`block px-3 py-2 ${colorScheme.title} ${colorScheme.hover}`}
-              >
-                Connect
-              </a>
-            </div>
-          </div>
-        )}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              className="md:hidden overflow-hidden"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              <div className="px-2 pt-2 pb-4 space-y-1">
+                {mobileLinks.map((link, i) => (
+                  <motion.a
+                    key={link.href}
+                    href={link.href}
+                    onClick={handleLinkClick}
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: i * 0.05, duration: 0.2 }}
+                    className={`block px-4 py-2.5 font-mono text-sm tracking-wide border-l-2 border-transparent hover:border-current ${colorScheme.title} ${colorScheme.hover}`}
+                  >
+                    {link.label}
+                  </motion.a>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   );

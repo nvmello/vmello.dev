@@ -17,13 +17,13 @@ import WorkoutData from "./WorkoutData";
 function MyMarquee() {
   return (
     <SmoothMarquee speed={6}>
-      <div className="flex items-center ml-20 mr-16">
+      <div className="flex items-center ml-4 md:ml-16 lg:ml-20 mr-4 md:mr-16">
         <MusicHistory />
       </div>
-      <div className="flex items-center ml-16 mr-16">
+      <div className="flex items-center ml-4 md:ml-16 mr-4 md:mr-16">
         <WorkoutData />
       </div>
-      <div className="flex items-center ml-16 mr-20">
+      <div className="flex items-center ml-4 md:ml-16 mr-4 md:mr-20">
         <div className="w-8"></div>
       </div>
     </SmoothMarquee>

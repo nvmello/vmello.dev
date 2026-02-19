@@ -28,21 +28,22 @@ export const ProfessionalConnect = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-      {professionalLinks.map((item) => (
+    <div className="grid grid-cols-3 gap-3 sm:gap-6 max-w-4xl mx-auto">
+      {professionalLinks.map((item, index) => (
         <ProfessionalCard
           key={item.account}
           icon={item.icon}
           link={item.link}
           label={item.account}
           description={item.description}
+          index={index}
         />
       ))}
     </div>
   );
 };
 
-const ProfessionalCard = ({ icon, link, label, description }) => {
+const ProfessionalCard = ({ icon, link, label, description, index }) => {
   const [scope, animate] = useAnimate();
   const { colorScheme } = useColorContext();
 
@@ -69,27 +70,33 @@ const ProfessionalCard = ({ icon, link, label, description }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={`
-        relative p-8 rounded-lg border-2 transition-all duration-300
+        relative p-4 sm:p-8 rounded-lg border-2 transition-all duration-300
         ${colorScheme.border} ${colorScheme.borderHover}
         ${colorScheme.bg} group cursor-pointer
       `}
     >
-      <div className="flex flex-col items-center text-center space-y-4">
+      <div className="flex flex-col items-center text-center space-y-2 sm:space-y-4">
+        <span
+          className={`font-mono text-[10px] tracking-widest ${colorScheme.text} opacity-50 hidden sm:block`}
+        >
+          {String(index + 1).padStart(2, "0")}
+        </span>
+
         <div className={`
-          p-4 rounded-full transition-all duration-300
+          p-3 sm:p-4 rounded-full transition-all duration-300
           ${colorScheme.bgSubtle} ${colorScheme.bgAccentHover}
         `}>
           <MyIcon
             icon={icon}
-            size="text-3xl"
+            size="text-xl sm:text-3xl"
           />
         </div>
 
         <div>
-          <h3 className={`text-xl font-semibold mb-1 ${colorScheme.title}`}>
+          <h3 className={`text-sm sm:text-xl font-semibold mb-1 ${colorScheme.title}`}>
             {label}
           </h3>
-          <p className={`text-sm ${colorScheme.text}`}>
+          <p className={`text-xs sm:text-sm ${colorScheme.text} hidden sm:block`}>
             {description}
           </p>
         </div>

@@ -9,6 +9,15 @@ import { Section } from "./components/util/layout-components";
 import { useColorContext } from "./context/ColorContext";
 import { ReactLenis, useLenis } from "lenis/react";
 
+const SectionDivider = () => {
+  const { colorScheme } = useColorContext();
+  return (
+    <div className="py-4 sm:py-6">
+      <div className={`h-px bg-gradient-to-r ${colorScheme.divider}`} />
+    </div>
+  );
+};
+
 function App() {
   const { colorScheme } = useColorContext();
 
@@ -21,7 +30,8 @@ function App() {
       <div className={`${colorScheme.bg} min-h-screen flex-grow`}>
         <Navbar />
         <div className="container mx-auto">
-          <hr className="mt-16" />
+          <div className="mt-16" />
+          <SectionDivider />
           <div id="about">
             <section className="min-h-[35vh]">
               <Section>
@@ -29,7 +39,7 @@ function App() {
               </Section>
             </section>
           </div>
-          <hr />
+          <SectionDivider />
           <div id="projects">
             <section className="min-h-[35vh]">
               <Section>
@@ -37,7 +47,7 @@ function App() {
               </Section>
             </section>
           </div>
-          <hr />
+          <SectionDivider />
           <div id="connect">
             <section className="min-h-[35vh]">
               <Section>
@@ -45,16 +55,8 @@ function App() {
               </Section>
             </section>
           </div>
-          <hr />
-          {/* <div id="photography">
-            <section className="min-h-[35vh]">
-              <Section>
-                <SectionFour />
-              </Section>
-            </section>
-          </div> */}
+          <SectionDivider />
         </div>
-        <hr />
         <div className={colorScheme.bg}>
           <Footer />
         </div>

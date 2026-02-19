@@ -36,6 +36,8 @@ const colorSchemes = {
     hoverShadow:
       "shadow-md hover:shadow-[#00ff00] transition-shadow duration-500 ease-in-out",
     borderAccent: "border-2 border-[#00ff00]",
+    hoverGlow: "hover:shadow-[0_0_20px_rgba(0,255,0,0.08)]",
+    divider: "from-transparent via-[#00ff00]/20 to-transparent",
     duotonePresets: {
       primary: "#FFFFFF",
       secondary: "#6b7280",
@@ -74,6 +76,8 @@ const colorSchemes = {
     hoverShadow:
       "shadow-md hover:shadow-[#B8D09A] transition-shadow duration-500 ease-in-out",
     borderAccent: "border-2 border-[#435D56]",
+    hoverGlow: "hover:shadow-[0_0_20px_rgba(184,208,154,0.1)]",
+    divider: "from-transparent via-[#B8D09A]/20 to-transparent",
     duotonePresets: {
       primary: "#B8D09A",
       secondary: "#435D56",

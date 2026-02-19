@@ -46,7 +46,7 @@ export const SectionContent = ({ children }) => {
   const { colorScheme } = useColorContext();
   return (
     <div
-      className={`${colorScheme.text} m-10 text-base sm:text-lg space-y-3 sm:space-y-5 overflow-visible break-words mx-auto`}
+      className={`${colorScheme.text} mx-4 sm:mx-8 md:mx-10 my-6 sm:my-8 text-base sm:text-lg space-y-3 sm:space-y-5 overflow-visible break-words`}
       style={{ lineHeight: '1.7' }}
     >
       {children}
