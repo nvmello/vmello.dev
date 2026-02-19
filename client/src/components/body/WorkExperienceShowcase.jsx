@@ -59,7 +59,7 @@ const ExperienceCard = ({ experience, index }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className={`
-        relative rounded-xl border-2 p-6 transition-all duration-300
+        relative rounded-xl border-2 p-6 transition-[border-color,box-shadow] duration-300
         ${colorScheme.border} ${colorScheme.borderHover} ${colorScheme.bgSubtle}
         group cursor-pointer
       `}

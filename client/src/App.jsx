@@ -49,7 +49,7 @@ function App() {
           </div>
           <SectionDivider />
           <div id="connect">
-            <section className="min-h-[35vh]">
+            <section className="min-h-[20vh] sm:min-h-[35vh]">
               <Section>
                 <SectionThree />
               </Section>

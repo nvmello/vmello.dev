@@ -248,7 +248,7 @@ const ProjectCard = ({ project, index, isMobile, isExpanded, onToggle }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className={`
-        relative rounded-xl border-2 p-4 sm:p-6 transition-all duration-300
+        relative rounded-xl border-2 p-4 sm:p-6 transition-[border-color,box-shadow] duration-300
         ${colorScheme.border} ${colorScheme.borderHover} ${colorScheme.bgSubtle}
         ${colorScheme.hoverGlow} active:scale-[0.98]
         group

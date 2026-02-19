@@ -1,5 +1,4 @@
-import React from "react";
-import { useAnimate } from "framer-motion";
+import React, { useState } from "react";
 import { useColorContext } from "../../context/ColorContext";
 import MyIcon from "../util/MyIcon";
 
@@ -44,35 +43,22 @@ export const ProfessionalConnect = () => {
 };
 
 const ProfessionalCard = ({ icon, link, label, description, index }) => {
-  const [scope, animate] = useAnimate();
   const { colorScheme } = useColorContext();
-
-  const handleMouseEnter = () => {
-    animate(scope.current, {
-      scale: 1.05,
-      transition: { duration: 0.2 }
-    });
-  };
-
-  const handleMouseLeave = () => {
-    animate(scope.current, {
-      scale: 1,
-      transition: { duration: 0.2 }
-    });
-  };
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <a
       href={link}
       target="_blank"
       rel="noopener noreferrer"
-      ref={scope}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className={`
-        relative p-4 sm:p-8 rounded-lg border-2 transition-all duration-300
+        relative p-4 sm:p-8 rounded-lg border-2
+        transition-[border-color,box-shadow,transform] duration-300
+        hover:scale-105 active:scale-[0.98]
         ${colorScheme.border} ${colorScheme.borderHover}
-        ${colorScheme.bg} group cursor-pointer
+        ${colorScheme.bg} cursor-pointer
       `}
     >
       <div className="flex flex-col items-center text-center space-y-2 sm:space-y-4">
@@ -82,14 +68,28 @@ const ProfessionalCard = ({ icon, link, label, description, index }) => {
           {String(index + 1).padStart(2, "0")}
         </span>
 
-        <div className={`
-          p-3 sm:p-4 rounded-full transition-all duration-300
-          ${colorScheme.bgSubtle} ${colorScheme.bgAccentHover}
-        `}>
-          <MyIcon
-            icon={icon}
-            size="text-xl sm:text-3xl"
-          />
+        <div
+          className="p-3 sm:p-4 rounded-full transition-[background-color] duration-300"
+          style={{
+            backgroundColor: isHovered
+              ? (colorScheme.bg === "bg-[#000000]"
+                  ? "rgba(0, 255, 0, 0.1)"
+                  : "rgba(184, 208, 154, 0.2)")
+              : (colorScheme.bg === "bg-[#000000]"
+                  ? "#030303"
+                  : "rgba(255, 255, 255, 0.5)"),
+            color: isHovered
+              ? colorScheme.duotonePresets?.hoverPrimary
+              : colorScheme.duotonePresets?.primary,
+            "--fa-primary-color": isHovered
+              ? colorScheme.duotonePresets?.hoverPrimary
+              : colorScheme.duotonePresets?.primary,
+            "--fa-secondary-color": isHovered
+              ? colorScheme.duotonePresets?.hoverSecondary
+              : colorScheme.duotonePresets?.secondary,
+          }}
+        >
+          <i className={`${icon} text-xl sm:text-3xl`} />
         </div>
 
         <div>
