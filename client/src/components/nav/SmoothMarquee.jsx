@@ -121,7 +121,7 @@ function SmoothMarquee({ children, speed = 25 }) {
   }, []);
 
   return (
-    <div ref={wrapperRef} className="relative w-0 md:w-3/5 lg:w-4/6 overflow-hidden">
+    <div ref={wrapperRef} className="relative flex-1 md:w-3/5 lg:w-4/6 overflow-hidden">
       {/* Gradient overlays */}
       <div className="absolute inset-0 pointer-events-none z-10">
         <div
