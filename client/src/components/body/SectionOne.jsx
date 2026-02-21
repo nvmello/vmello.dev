@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { SectionHeader, SectionContent } from "../util/layout-components";
 import { useColorContext } from "../../context/ColorContext";
+import ResumeModal from "../util/ResumeModal";
 
 const tags = [
   "AI",
@@ -11,6 +13,7 @@ const tags = [
 
 function SectionOne() {
   const { colorScheme } = useColorContext();
+  const [resumeOpen, setResumeOpen] = useState(false);
 
   return (
     <>
@@ -45,6 +48,17 @@ function SectionOne() {
             </span>
           ))}
         </div>
+        <button
+          onClick={() => setResumeOpen(true)}
+          className={`inline-flex items-center gap-2 mt-4 px-4 py-2 text-sm font-medium rounded-md border transition-all duration-300 w-fit ${colorScheme.linkBtn}`}
+        >
+          <i className="fa-solid fa-arrow-down-to-line text-xs" />
+          Resume
+        </button>
+        <ResumeModal
+          isOpen={resumeOpen}
+          onClose={() => setResumeOpen(false)}
+        />
       </SectionContent>
     </>
   );
