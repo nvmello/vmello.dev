@@ -8,6 +8,8 @@ import SectionFour from "./components/body/SectionFour";
 import { Section } from "./components/util/layout-components";
 import { useColorContext } from "./context/ColorContext";
 import { ReactLenis, useLenis } from "lenis/react";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const SectionDivider = () => {
   const { colorScheme } = useColorContext();
@@ -61,6 +63,8 @@ function App() {
           <Footer />
         </div>
       </div>
+      <Analytics />
+      <SpeedInsights />
     </ReactLenis>
   );
 }
