@@ -3,6 +3,19 @@ import * as dotenv from "dotenv";
 import express from "express";
 import { createServer } from "http";
 import { WebSocket, WebSocketServer } from "ws";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+import {
+  getDeveloperToken,
+  getRecentTracks,
+  appleTrackToRecord,
+  resolveArtistId,
+  isAppleMusicConfigured,
+} from "./appleMusic.js";
+
+// ESM equivalent of __dirname, used to serve the Apple auth page.
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Server Architecture Overview:
@@ -70,6 +83,11 @@ const HOST = process.env.HOST || "localhost";
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
 const DB_NAME = "personal_data";
+
+// "On Repeat" rolling window — top artist is computed over the last N days.
+const ON_REPEAT_WINDOW_DAYS = 3;
+// How often the server polls Apple Music for new plays.
+const APPLE_POLL_INTERVAL_MS = 15 * 60 * 1000;
 
 /**
  * MongoDB Connection
@@ -517,30 +535,29 @@ async function getListeningStatsHandler(req, res) {
 }
 
 /**
- * Route Handler: Get Top Artist in Last 60 Days
+ * Route Handler: Get Top Artist ("On Repeat")
  * -------------------------------------------
  * GET /api/listening-history/top-artist
  *
- * Returns the most listened to artist in the last 60 days
- * Includes sample track data to get Apple Music metadata
+ * Returns the most-played artist over a rolling window (ON_REPEAT_WINDOW_DAYS),
+ * aggregated from listening_history. The window is kept current autonomously by
+ * the Apple Music poller (pollApplePlaysIntoMongo) — no phone app required.
  */
 async function getTopArtistHandler(req, res) {
   try {
     const listeningHistory = client.db(DB_NAME).collection("listening_history");
 
-    // Get date 60 days ago
-    const sixtyDaysAgo = new Date();
-    sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+    const windowStart = new Date();
+    windowStart.setDate(windowStart.getDate() - ON_REPEAT_WINDOW_DAYS);
 
-    // Top artist in last 60 days with sample track for metadata
     const topArtist = await listeningHistory
       .aggregate([
-        { $match: { timestamp: { $gte: sixtyDaysAgo } } },
+        { $match: { timestamp: { $gte: windowStart } } },
         {
           $group: {
             _id: "$artist_name",
             count: { $sum: 1 },
-            // Get the most recent track from this artist for metadata
+            // Most recent track from this artist, for metadata/deep links.
             sample_track: { $first: "$$ROOT" },
           },
         },
@@ -550,22 +567,35 @@ async function getTopArtistHandler(req, res) {
       .toArray();
 
     if (!topArtist.length) {
-      return res.status(404).json({ message: "No listening history in the last 60 days" });
+      return res.status(404).json({
+        message: `No listening history in the last ${ON_REPEAT_WINDOW_DAYS} days`,
+      });
     }
 
+    const sample = topArtist[0].sample_track || {};
     const result = {
       artist_name: topArtist[0]._id,
       play_count: topArtist[0].count,
+      window_days: ON_REPEAT_WINDOW_DAYS,
     };
 
-    // Add Apple Music Artist ID if available
-    if (topArtist[0].sample_track?.apple_music_artist_id) {
-      result.apple_music_artist_id = topArtist[0].sample_track.apple_music_artist_id;
+    if (sample.apple_music_artist_id) {
+      result.apple_music_artist_id = sample.apple_music_artist_id;
+    }
+    if (sample.spotify_uri) result.spotify_uri = sample.spotify_uri;
+    if (sample.album_artwork_url) {
+      result.album_artwork_url = sample.album_artwork_url;
     }
 
-    // Add Spotify URI if available
-    if (topArtist[0].sample_track?.spotify_uri) {
-      result.spotify_uri = topArtist[0].sample_track.spotify_uri;
+    // Resolve a catalog artist ID for a proper Apple Music deep link when one
+    // wasn't stored. Non-fatal — the UI falls back to an artist search.
+    if (!result.apple_music_artist_id && isAppleMusicConfigured()) {
+      try {
+        const id = await resolveArtistId(result.artist_name);
+        if (id) result.apple_music_artist_id = id;
+      } catch {
+        /* ignore */
+      }
     }
 
     res.json(result);
@@ -579,6 +609,157 @@ async function getTopArtistHandler(req, res) {
   }
 }
 
+/**
+ * Route Handler: Apple Music Developer Token
+ * ------------------------------------------
+ * GET /api/apple-music/dev-token
+ *
+ * Returns the short-lived ES256 developer token for MusicKit JS to use on the
+ * one-time auth page. This token is safe to expose to the browser — it is not
+ * the private key and grants no library access without a Music User Token.
+ */
+async function appleMusicDevTokenHandler(req, res) {
+  if (!isAppleMusicConfigured() && !process.env.APPLE_MUSIC_KEY_ID) {
+    return res
+      .status(503)
+      .json({ error: "Apple Music developer token not configured" });
+  }
+  try {
+    const token = await getDeveloperToken();
+    res.json({ token });
+  } catch (error) {
+    console.error("❌ Error minting developer token:", error.message);
+    res.status(500).json({ error: "Failed to mint developer token" });
+  }
+}
+
+/**
+ * Route Handler: Apple Music Recent Tracks (debug/verification)
+ * ------------------------------------------------------------
+ * GET /api/apple-music/recent
+ *
+ * Returns the raw recently played tracks from Apple Music. Useful to confirm
+ * the Music User Token works end to end after setup.
+ */
+async function appleMusicRecentHandler(req, res) {
+  if (!isAppleMusicConfigured()) {
+    return res.status(503).json({ error: "Apple Music not configured" });
+  }
+  try {
+    const items = await getRecentTracks(30);
+    res.json({
+      count: items.length,
+      tracks: items.map((i) => ({
+        name: i?.attributes?.name,
+        artist: i?.attributes?.artistName,
+        album: i?.attributes?.albumName,
+      })),
+    });
+  } catch (error) {
+    console.error("❌ Error fetching Apple Music recent tracks:", error.message);
+    res.status(502).json({ error: error.message });
+  }
+}
+
+/**
+ * Route Handler: Apple Music Auth Page
+ * ------------------------------------
+ * GET /apple-auth
+ *
+ * Serves the one-time MusicKit JS page used to capture the Music User Token.
+ */
+function appleAuthPageHandler(req, res) {
+  try {
+    const html = readFileSync(join(__dirname, "apple-auth.html"), "utf8");
+    res.type("html").send(html);
+  } catch (error) {
+    console.error("❌ Error serving apple-auth page:", error.message);
+    res.status(500).send("Auth page unavailable");
+  }
+}
+
+/**
+ * Apple Music Poller
+ * ------------------
+ * Fetches recently played tracks from Apple Music and persists any NEW plays
+ * into listening_history with an approximate (poll-time) timestamp, so the
+ * "On Repeat" window stays current without the iOS app.
+ *
+ * New plays are detected by diffing the current track IDs against the previous
+ * poll's IDs (stored in apple_music_state). This avoids the re-flood/over-count
+ * bug that corrupted the old phone-app data — a track is only recorded the first
+ * poll it appears in, or again if it leaves and re-enters the recent window.
+ */
+let applePollInFlight = false;
+
+async function pollApplePlaysIntoMongo() {
+  if (!isAppleMusicConfigured()) return { skipped: "not configured" };
+  if (applePollInFlight) return { skipped: "already running" };
+  applePollInFlight = true;
+  try {
+    const db = client.db(DB_NAME);
+    const history = db.collection("listening_history");
+    const state = db.collection("apple_music_state");
+
+    const items = await getRecentTracks(30);
+    if (!items.length) return { inserted: 0, reason: "no recent tracks" };
+
+    const currentIds = items.map((i) => i?.id).filter(Boolean);
+    const stateDoc = await state.findOne({ _id: "recent_tracks" });
+    const firstRun = !stateDoc;
+    const prevIds = new Set(stateDoc?.last_ids || []);
+
+    // First run seeds the window; later runs record only newly appeared tracks.
+    const newItems = firstRun
+      ? items
+      : items.filter((i) => i?.id && !prevIds.has(i.id));
+
+    const playedAt = new Date();
+    let inserted = 0;
+    if (newItems.length) {
+      const records = newItems.map((item, idx) => ({
+        // Stagger timestamps (most-recent first) so play ordering is stable.
+        ...appleTrackToRecord(
+          item,
+          new Date(playedAt.getTime() - idx * 1000)
+        ),
+        created_at: new Date(),
+        updated_at: new Date(),
+      }));
+      const result = await history.insertMany(records, { ordered: false });
+      inserted = result.insertedCount;
+      broadcastNewTrack(records[0]); // newest play -> live clients
+    }
+
+    await state.updateOne(
+      { _id: "recent_tracks" },
+      { $set: { last_ids: currentIds, updated_at: new Date() } },
+      { upsert: true }
+    );
+
+    if (inserted) console.log(`🎧 Apple poll: +${inserted} new play(s)`);
+    return { inserted, firstRun, seen: currentIds.length };
+  } catch (error) {
+    console.error("❌ Apple poll failed:", error.message);
+    return { error: error.message };
+  } finally {
+    applePollInFlight = false;
+  }
+}
+
+/**
+ * Route Handler: Trigger Apple Poll (manual)
+ * ------------------------------------------
+ * GET /api/apple-music/poll — handy right after deploy to seed the window.
+ */
+async function appleMusicPollHandler(req, res) {
+  if (!isAppleMusicConfigured()) {
+    return res.status(503).json({ error: "Apple Music not configured" });
+  }
+  const result = await pollApplePlaysIntoMongo();
+  res.json(result);
+}
+
 // Route definitions
 app.post("/api/workouts", createWorkoutHandler);
 app.get("/api/workouts", getWorkoutsHandler);
@@ -586,6 +767,12 @@ app.post("/api/listening-history", createListeningHistoryHandler);
 app.get("/api/listening-history", getListeningHistoryHandler);
 app.get("/api/listening-history/stats", getListeningStatsHandler);
 app.get("/api/listening-history/top-artist", getTopArtistHandler);
+
+// Apple Music integration (autonomous server-side polling)
+app.get("/api/apple-music/dev-token", appleMusicDevTokenHandler);
+app.get("/api/apple-music/recent", appleMusicRecentHandler);
+app.get("/api/apple-music/poll", appleMusicPollHandler);
+app.get("/apple-auth", appleAuthPageHandler);
 
 /**
  * Graceful Shutdown Handler
@@ -620,6 +807,18 @@ async function startServer() {
       console.log(`📱 Network access: http://192.168.0.118:${PORT}`);
       console.log(`🔌 WebSocket server is running`);
       console.log(`📅 Server started at: ${new Date().toISOString()}`);
+
+      // Autonomous Apple Music polling keeps the "On Repeat" window fresh.
+      if (isAppleMusicConfigured()) {
+        pollApplePlaysIntoMongo();
+        setInterval(pollApplePlaysIntoMongo, APPLE_POLL_INTERVAL_MS);
+        console.log(
+          `🎧 Apple Music polling every ${APPLE_POLL_INTERVAL_MS / 60000} min ` +
+            `(On Repeat window: ${ON_REPEAT_WINDOW_DAYS} days)`
+        );
+      } else {
+        console.log("ℹ️ Apple Music not configured — polling disabled");
+      }
     });
   } catch (error) {
     console.error("❌ Failed to start server:", error);

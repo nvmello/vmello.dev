@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Apple Music — Capture User Token</title>
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #0b0b0b;
+        color: #f5f5f5;
+        max-width: 640px;
+        margin: 6vh auto;
+        padding: 0 24px;
+        line-height: 1.5;
+      }
+      h1 { font-size: 1.5rem; }
+      button {
+        font-size: 1rem;
+        padding: 12px 20px;
+        border: 0;
+        border-radius: 10px;
+        background: #fa2d48;
+        color: #fff;
+        cursor: pointer;
+      }
+      button:disabled { opacity: 0.5; cursor: default; }
+      pre {
+        background: #161616;
+        border: 1px solid #2a2a2a;
+        border-radius: 10px;
+        padding: 16px;
+        white-space: pre-wrap;
+        word-break: break-all;
+        user-select: all;
+      }
+      .muted { color: #9a9a9a; font-size: 0.9rem; }
+      ol { padding-left: 1.2rem; }
+    </style>
+    <script
+      src="https://js-cdn.music.apple.com/musickit/v3/musickit.js"
+      data-web-components
+      async
+    ></script>
+  </head>
+  <body>
+    <h1>Capture your Apple Music User Token</h1>
+    <p class="muted">
+      Run this once (and again only if the token is ever revoked). Sign in with
+      the Apple ID whose listening history should power the site, copy the token
+      below, and set it as <code>APPLE_MUSIC_USER_TOKEN</code> in Railway.
+    </p>
+
+    <p>
+      <button id="authorize" disabled>Loading MusicKit…</button>
+    </p>
+
+    <pre id="out" hidden></pre>
+    <p id="error" class="muted"></p>
+
+    <script>
+      const btn = document.getElementById("authorize");
+      const out = document.getElementById("out");
+      const errEl = document.getElementById("error");
+
+      function showError(msg) {
+        errEl.textContent = msg;
+      }
+
+      document.addEventListener("musickitloaded", async () => {
+        try {
+          const res = await fetch("/api/apple-music/dev-token");
+          if (!res.ok) throw new Error("dev-token endpoint returned " + res.status);
+          const { token } = await res.json();
+          await MusicKit.configure({
+            developerToken: token,
+            app: { name: "vmello.dev", build: "1.0.0" },
+          });
+          btn.disabled = false;
+          btn.textContent = "Authorize Apple Music";
+        } catch (e) {
+          showError("Could not configure MusicKit: " + e.message);
+        }
+      });
+
+      btn.addEventListener("click", async () => {
+        try {
+          btn.disabled = true;
+          const music = MusicKit.getInstance();
+          const userToken = await music.authorize();
+          out.hidden = false;
+          out.textContent = "APPLE_MUSIC_USER_TOKEN=" + userToken;
+        } catch (e) {
+          showError("Authorization failed: " + e.message);
+          btn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>
