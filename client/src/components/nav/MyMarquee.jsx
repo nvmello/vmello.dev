@@ -17,14 +17,15 @@ import WorkoutData from "./WorkoutData";
 function MyMarquee() {
   return (
     <SmoothMarquee speed={6}>
-      <div className="flex items-center ml-4 md:ml-16 lg:ml-20 mr-4 md:mr-16">
+      {/* Equal one-sided spacing (padding-right) on every item guarantees the
+          gap between items and the gap at the loop seam are identical, and
+          padding (unlike margin) is counted in scrollWidth so the loop
+          distance measures exactly. */}
+      <div className="flex items-center pr-8 md:pr-32">
         <MusicHistory />
       </div>
-      <div className="flex items-center ml-4 md:ml-16 mr-4 md:mr-16">
+      <div className="flex items-center pr-8 md:pr-32">
         <WorkoutData />
-      </div>
-      <div className="flex items-center ml-4 md:ml-16 mr-4 md:mr-20">
-        <div className="w-8"></div>
       </div>
     </SmoothMarquee>
   );
