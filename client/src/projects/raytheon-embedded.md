@@ -41,4 +41,4 @@ Raytheon Technologies
 
 ## Icon
 
-fa-solid-microchip
+fa-solid fa-microchip
