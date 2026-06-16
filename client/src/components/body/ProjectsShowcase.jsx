@@ -178,6 +178,14 @@ const ProjectCardDetails = ({ project, colorScheme, accentColor }) => (
             <span>Website</span>
           </a>
         )}
+        {project.linkList.ios === "coming-soon" && (
+          <span
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium opacity-70 cursor-default ${colorScheme.techPill}`}
+          >
+            <MyIcon icon="fa-brands fa-apple" size="text-xs" />
+            <span>iOS Coming Soon</span>
+          </span>
+        )}
       </div>
     )}
   </div>

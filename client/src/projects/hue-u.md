@@ -1,12 +1,12 @@
-# Hue U, AI-Powered Coloring Book Platform
+# Hue U, AI Commerce Platform
 
 ## Description
 
-Full-stack platform that transforms photos into coloring pages using AI, with a book builder and print-on-demand ordering. Built independently from idea through production, handling backend, web app, payments, and print fulfillment.
+A multi-platform business (web app and native iOS) that turns photos into custom coloring books with print-on-demand fulfillment. Built and run solo, end to end. The coloring books are the product; the harder part is the system behind them: an AI generation pipeline, real payment and fulfillment flows, and an agent-driven layer that helps build and operate the business.
 
 ## Status
 
-Personal Project
+Launching Soon
 
 ## Type
 
@@ -17,17 +17,23 @@ project
 - Python
 - FastAPI
 - Next.js
+- SwiftUI
 - Supabase
-- Google Gemini
 - Stripe
+- TypeScript
+- MCP
+- OpenRouter
 - Docker
 - Google Cloud
+- DigitalOcean
 
 ## Features
 
-- AI-powered photo-to-line-art generation
-- Book builder with print-on-demand fulfillment
-- Credit system with Stripe payment integration
+- AI generation pipeline with per-image prompting and a scored quality eval harness
+- Native iOS app (SwiftUI, GPU-accelerated canvas) alongside a Next.js web builder
+- Hermes, an always-on ops agent that reads the live business and runs approval-gated actions behind a strict read/write trust boundary
+- Stripe payments, credit system, and automated print-on-demand fulfillment
+- Production hardening: JWT platform attestation, audited writes, and secrets pulled at runtime
 
 ## Role
 
@@ -36,6 +42,7 @@ Founder
 ## Links
 
 - **Website**: https://hueu.ai
+- **iOS**: coming-soon
 
 ## Icon
 
