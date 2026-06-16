@@ -39,4 +39,4 @@ Founder
 
 ## Icon
 
-fa-solid-palette
+fa-solid fa-palette

@@ -39,4 +39,4 @@ Nextgear Capital
 
 ## Icon
 
-fa-solid-briefcase
+fa-solid fa-briefcase

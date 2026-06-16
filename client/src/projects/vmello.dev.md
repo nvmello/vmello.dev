@@ -49,4 +49,4 @@ project
 
 ## Icon
 
-fa-solid-globe
+fa-solid fa-globe
