@@ -426,8 +426,12 @@ function WorkoutData() {
               </span>
             </div>
           ) : (
-            <span style={{ color: color }}>
-              <MyIcon icon="fa-duotone fa-thin fa-potato" />
+            <span
+              role="img"
+              aria-label="No workouts today"
+              style={{ color: color, fontSize: "1.05rem", lineHeight: 1 }}
+            >
+              🥔
             </span>
           )}
         </div>
