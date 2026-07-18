@@ -186,6 +186,7 @@ const ProjectCardDetails = ({ project, colorScheme, accentColor }) => (
 const ProjectCard = ({ project, index, isMobile, isExpanded, onToggle }) => {
   const { colorScheme } = useColorContext();
   const accentColor = colorScheme.accent.replace("text-[", "").replace("]", "");
+  const cardRef = useRef(null);
   const detailsRef = useRef(null);
   const chevronRef = useRef(null);
 
@@ -205,7 +206,18 @@ const ProjectCard = ({ project, index, isMobile, isExpanded, onToggle }) => {
       gsap.fromTo(
         detailsRef.current,
         { height: 0, opacity: 0 },
-        { height: "auto", opacity: 1, duration: 0.4, ease: "power2.out" }
+        {
+          height: "auto",
+          opacity: 1,
+          duration: 0.4,
+          ease: "power2.out",
+          onComplete: () => {
+            cardRef.current?.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          },
+        }
       );
     } else {
       gsap.to(detailsRef.current, {
@@ -244,6 +256,7 @@ const ProjectCard = ({ project, index, isMobile, isExpanded, onToggle }) => {
 
   return (
     <motion.div
+      ref={cardRef}
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}

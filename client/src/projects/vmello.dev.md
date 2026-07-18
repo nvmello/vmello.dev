@@ -28,7 +28,7 @@ project
 ## Features
 
 - Real-time fitness tracking via Swift iOS app with MongoDB persistence
-- Spotify API integration displaying current music favorites
+- Spotify and Apple Music integration displaying current music favorites
 - Advanced GSAP and Framer Motion animation components
 - Smooth scrolling with Lenis integration
 - WebSocket-powered live workout data broadcasting
