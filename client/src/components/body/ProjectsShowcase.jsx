@@ -212,10 +212,20 @@ const ProjectCard = ({ project, index, isMobile, isExpanded, onToggle }) => {
           duration: 0.4,
           ease: "power2.out",
           onComplete: () => {
-            cardRef.current?.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
+            const card = cardRef.current;
+            if (!card) return;
+            const NAV_OFFSET = 80; // fixed navbar (h-16) + breathing room
+            const rect = card.getBoundingClientRect();
+            if (rect.height <= window.innerHeight - NAV_OFFSET) {
+              card.scrollIntoView({ behavior: "smooth", block: "center" });
+            } else {
+              // Card is taller than the viewport: centering would push its
+              // title above the fold under the fixed nav. Pin the top instead.
+              window.scrollTo({
+                top: window.scrollY + rect.top - NAV_OFFSET,
+                behavior: "smooth",
+              });
+            }
           },
         }
       );
