@@ -87,10 +87,10 @@ const ProjectCardDetails = ({ project, colorScheme, accentColor }) => (
         </h4>
         <ul className={`text-sm ${colorScheme.text} space-y-1`}>
           {project.featureList.map((feature, i) => (
-            <li key={i} className="flex items-center">
+            <li key={i} className="flex items-start">
               <FontAwesomeIcon
                 icon={faCheck}
-                className="text-xs mr-2 shrink-0"
+                className="text-xs mr-2 mt-1 shrink-0"
                 style={{ color: accentColor }}
               />
               {feature}
