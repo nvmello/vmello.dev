@@ -104,10 +104,10 @@ const ExperienceCard = ({ experience, index }) => {
             </h4>
             <ul className={`text-sm ${colorScheme.text} space-y-1`}>
               {experience.featureList.map((feature, i) => (
-                <li key={i} className="flex items-center">
+                <li key={i} className="flex items-start">
                   <FontAwesomeIcon
                     icon={faCheck}
-                    className="text-xs mr-2"
+                    className="text-xs mr-2 mt-1 shrink-0"
                     style={{ color: accentColor }}
                   />
                   {feature}
