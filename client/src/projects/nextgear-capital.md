@@ -1,8 +1,8 @@
-# Backend Software Engineer, Nextgear Capital
+# Software Engineer - AI Tech, Nextgear Capital
 
 ## Description
 
-Backend software engineer at Cox Automotive building backend services for mobile and dealer-facing applications. Within six months, moved onto an experimental team establishing how AI-assisted workflows get built and adopted across the engineering org.
+Hired on as a backend engineer at Cox Automotive building services for mobile and dealer-facing applications, then quickly moved onto the foundational AI Tech Software team, establishing how AI-assisted workflows get built and adopted across the engineering org.
 
 ## Status
 
@@ -27,11 +27,11 @@ experience
 
 ## Features
 
-- Developing and maintaining backend services for mobile and dealer-facing applications using Java and Python-based Azure Functions across a REST API microservices architecture
-- Self-initiated and built a central AI skill hub with no team mandate behind it, now adopted by 150+ engineers and maintained by 30+ contributors org-wide, built on modular, on-demand automation components instead of always-on integrations
-- Designed a fully self-serve contribution pipeline: engineers ship new skills via pull request, CI auto-publishes merged changes, and every engineer picks up updates through a routine local package update
-- Built shareable subagent scaffolding letting engineers package and reuse specialized AI agent configurations across teams
-- Built developer-facing tooling for context management, token usage monitoring, and external tool connection management
+- Self-initiated and built our agent harness with no team mandate behind it: adopted org-wide and now widely used across P&E, with 150+ engineers on it and 30+ contributors maintaining it, built on modular, on-demand automation components instead of always-on integrations
+- Runs effectively as open source inside the org: any team can build, own, and share capabilities through a self-serve pull request pipeline, with CI publishing merged changes out to every engineer and a privileged subset gated behind me and the other admins
+- Partnered with senior architects to design autonomous multi-agent workflows that carry context and validation through the full development loop, from spec to implementation to review
+- Built the connective layer underneath: CLI tooling and on-demand skills that hand agents reliable context, MCP integrations into internal and external tools, plus token and cost telemetry showing which workflows are actually worth keeping
+- Developed and maintained backend services for mobile and dealer-facing applications using Java and Python-based Azure Functions across a REST API microservices architecture
 
 ## Duration
 
