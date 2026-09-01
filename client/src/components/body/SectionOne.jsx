@@ -2,6 +2,7 @@ import { useState } from "react";
 import { SectionHeader, SectionContent } from "../util/layout-components";
 import { useColorContext } from "../../context/ColorContext";
 import ResumeModal from "../util/ResumeModal";
+import AsuPitchfork from "../util/AsuPitchfork";
 
 const tags = [
   "AI",
@@ -25,18 +26,16 @@ function SectionOne() {
         </p>
         <p>
           I'm particularly interested in how AI is changing the way we
-          design, communicate, and ship. A lot of my focus is on
-          reducing friction, improving how work flows, and finding
-          better ways to turn intent into working systems.
-        </p>
-        <p className="font-light">
-          I'm motivated by building systems that save time, reduce
-          complexity, and help people focus on what actually matters.
+          design, communicate, and ship. Most of my focus goes to
+          reducing friction and finding better ways to turn intent into
+          working systems, so people can spend their attention on what
+          actually matters.
         </p>
         <p className="font-light">
           Outside of engineering, I spend time rock climbing, lifting,
           and exploring new places with my camera. I studied Computer
           Science at Arizona State University.
+          <AsuPitchfork className="inline-block h-[1.6em] w-[1em] ml-2 align-[-0.38em]" />
         </p>
         <div className="flex flex-wrap gap-2 pt-2">
           {tags.map((tag) => (

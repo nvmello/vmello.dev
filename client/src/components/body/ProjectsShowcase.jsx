@@ -178,6 +178,18 @@ const ProjectCardDetails = ({ project, colorScheme, accentColor }) => (
             <span>Website</span>
           </a>
         )}
+        {project.linkList["app store"] && (
+          <a
+            href={project.linkList["app store"]}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${colorScheme.linkBtn}`}
+          >
+            <MyIcon icon="fa-brands fa-app-store-ios" size="text-xs" />
+            <span>App Store</span>
+          </a>
+        )}
       </div>
     )}
   </div>

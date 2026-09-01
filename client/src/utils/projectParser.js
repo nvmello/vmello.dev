@@ -7,14 +7,12 @@
 import nextgearCapitalMd from "../projects/nextgear-capital.md?raw";
 import hueUMd from "../projects/hue-u.md?raw";
 import raytheonEmbeddedMd from "../projects/raytheon-embedded.md?raw";
-import vmelloDevMd from "../projects/vmello.dev.md?raw";
 
 // Project files mapping
 const projectFiles = {
   "nextgear-capital.md": nextgearCapitalMd,
   "hue-u.md": hueUMd,
   "raytheon-embedded.md": raytheonEmbeddedMd,
-  "vmello.dev.md": vmelloDevMd,
 };
 
 /**
@@ -101,13 +99,12 @@ export const loadAllProjects = () => {
     }
   }
 
-  // Sort by custom order: Nextgear, Hue U, Raytheon, vmello.dev
+  // Sort by custom order: Nextgear, Hue U, Raytheon
   return projects.sort((a, b) => {
     const customOrder = {
       "nextgear-capital": 0,
       "hue-u": 1,
       "raytheon-embedded": 2,
-      "vmello.dev": 3,
     };
     
     const aOrder = customOrder[a.filename] ?? 99;
