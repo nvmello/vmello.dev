@@ -1,4 +1,4 @@
-# Self-Service Parking Payments
+# SpotOps, Self-Service Parking Payments
 
 ## Description
 
