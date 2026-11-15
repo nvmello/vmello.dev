@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useColorContext } from "../../context/ColorContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import MyIcon from "../util/MyIcon";
 
 export const ProfessionalConnect = () => {
@@ -8,19 +11,19 @@ export const ProfessionalConnect = () => {
   const professionalLinks = [
     {
       account: "LinkedIn",
-      icon: "fa-brands fa-linkedin",
+      icon: faLinkedin,
       link: "https://www.linkedin.com/in/nvmello/",
       description: "Professional Network"
     },
     {
       account: "GitHub",
-      icon: "fa-brands fa-github",
+      icon: faGithub,
       link: "https://github.com/nvmello",
       description: "Code Repository"
     },
     {
       account: "Email",
-      icon: "fa-solid fa-envelope",
+      icon: faEnvelope,
       link: "mailto:nicholas@vmello.dev",
       description: "Get In Touch"
     }
@@ -89,7 +92,7 @@ const ProfessionalCard = ({ icon, link, label, description, index }) => {
               : colorScheme.duotonePresets?.secondary,
           }}
         >
-          <i className={`${icon} text-xl sm:text-3xl`} />
+          <FontAwesomeIcon icon={icon} className="text-xl sm:text-3xl" />
         </div>
 
         <div>
