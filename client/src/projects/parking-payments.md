@@ -2,7 +2,7 @@
 
 ## Description
 
-Self-service prepay parking for a privately owned lot in downtown Indianapolis. Drivers scan a QR code, enter their plate, pick how long to stay, and pay through Stripe; staff triage expired cars from a live dashboard. Built solo for a local business owner, from first ask to a working payment flow on Vercel in under a day. The hard part was the money path: prices are recomputed server-side, a Stripe webhook is the source of truth, and the total is locked at purchase, so there is no exit billing or surprise charges.
+Self-service prepay parking for a privately owned lot in downtown Indianapolis, built solo and in production with the owner. Drivers scan a QR code, enter their plate, pick how long to stay, and pay through Stripe, with no app to download. Staff work from a live dashboard that shows who is paid up and who has expired. The money path is the part I was most careful with: a Stripe webhook is the source of truth, prices are recomputed on the server, and the total is locked at purchase, so a driver is never billed more than they agreed to.
 
 ## Status
 
