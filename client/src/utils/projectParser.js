@@ -5,12 +5,14 @@
 
 // Import markdown files directly (Vite-compatible approach)
 import nextgearCapitalMd from "../projects/nextgear-capital.md?raw";
+import parkingPaymentsMd from "../projects/parking-payments.md?raw";
 import hueUMd from "../projects/hue-u.md?raw";
 import raytheonEmbeddedMd from "../projects/raytheon-embedded.md?raw";
 
 // Project files mapping
 const projectFiles = {
   "nextgear-capital.md": nextgearCapitalMd,
+  "parking-payments.md": parkingPaymentsMd,
   "hue-u.md": hueUMd,
   "raytheon-embedded.md": raytheonEmbeddedMd,
 };
@@ -99,12 +101,13 @@ export const loadAllProjects = () => {
     }
   }
 
-  // Sort by custom order: Nextgear, Hue U, Raytheon
+  // Sort by custom order: Nextgear, SpotOps, Hue U, Raytheon
   return projects.sort((a, b) => {
     const customOrder = {
       "nextgear-capital": 0,
-      "hue-u": 1,
-      "raytheon-embedded": 2,
+      "parking-payments": 1,
+      "hue-u": 2,
+      "raytheon-embedded": 3,
     };
     
     const aOrder = customOrder[a.filename] ?? 99;

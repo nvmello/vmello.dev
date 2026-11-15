@@ -2,7 +2,7 @@
 
 ## Description
 
-Full-stack platform (web + native iOS app) that turns photos into coloring pages using AI, live at hueu.ai with the iOS app shipped to the App Store. Directed AI coding agents to architect, implement, test, and ship the entire platform end-to-end (backend, web app, native iOS app, payments, print fulfillment, and production operations), backed by full CI/CD and test coverage throughout.
+Photos-to-coloring-pages app with a web platform and a native iOS app on the App Store, built solo by directing AI coding agents from architecture through production operations, with full CI/CD and test coverage.
 
 ## Status
 
